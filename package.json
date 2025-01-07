@@ -2,8 +2,12 @@
   "name": "dubloon",
   "version": "1.0.0",
   "main": "index.ts",
+  "files": [
+    "plugin/build"
+  ],
   "scripts": {
     "start": "expo start",
+    "build": "expo-module build plugin",
     "android": "expo run:android",
     "ios": "expo run:ios"
   },
@@ -16,6 +20,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@types/react": "~18.3.12",
+    "expo-module-scripts": "^4.0.2",
     "typescript": "^5.3.3"
   },
   "workspaces": [
