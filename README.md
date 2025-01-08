@@ -1,10 +1,10 @@
-<h1 align="center">Dubloon 🌐📲</h2>
+<h1 align="center">Doubloon 🌐📲</h2>
 
 # About
 
 Launch straight into a WebView in a React Native (Expo) app.
 
-_It's called "Dubloon" because that sounds a bit like the first part of "WWW"._
+_It's called "Doubloon" because that sounds a bit like the first part of "WWW"._
 
 # Running the demo
 
@@ -75,6 +75,6 @@ npm run ios --configuration Release
 npm run android --variant release
 ```
 
-# Installing Dubloon in your own project
+# Installing Doubloon in your own project
 
-The Dubloon demo is powered by an Expo config plugin, which you can install in your own projects.
+The Doubloon demo is powered by an Expo config plugin, which you can install in your own projects.

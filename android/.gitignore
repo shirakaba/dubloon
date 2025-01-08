@@ -14,6 +14,3 @@ local.properties
 
 # Bundle artifacts
 *.jsbundle
-
-# Web app bundle
-app/src/main/assets/web

@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.Dubloon'
+    namespace 'com.anonymous.Doubloon'
     defaultConfig {
-        applicationId 'com.anonymous.Dubloon'
+        applicationId 'com.anonymous.Doubloon'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -175,15 +175,15 @@ dependencies {
     }
 }
 
-// == Dubloon config plugin START ==
-tasks.register("dubloonBundleWebApp", Exec) {
+// == Doubloon config plugin START ==
+tasks.register("doubloonBundleWebApp", Exec) {
     workingDir = file(["node", "--print", "require('node:path').resolve('$projectRoot', './web')"].execute(null, rootDir).text.trim())
     commandLine = ["node","--run","build"]
     doFirst {
-        println("[Dubloon] Building the web app...")
+        println("[Doubloon] Building the web app...")
     }
     doLast {
-        println("[Dubloon] ... Built the web app.")
+        println("[Doubloon] ... Built the web app.")
     }
 }
 
@@ -197,17 +197,17 @@ tasks.configureEach { task ->
         return;
     }
 
-    task.dependsOn("dubloonBundleWebApp");
+    task.dependsOn("doubloonBundleWebApp");
 
     task.doLast {
-        println("[Dubloon] Copying the web app build into the app bundle...");
+        println("[Doubloon] Copying the web app build into the app bundle...");
 
         copy {
             from(["node", "--print", "require('node:path').resolve('$projectRoot', './web/dist')"].execute(null, rootDir).text.trim());
             into("$rootDir/app/src/main/assets/web");
         }
 
-        println("[Dubloon] ... Copied the web app build into the app bundle.");
+        println("[Doubloon] ... Copied the web app build into the app bundle.");
     }
 }
-// == Dubloon config plugin END ==
+// == Doubloon config plugin END ==

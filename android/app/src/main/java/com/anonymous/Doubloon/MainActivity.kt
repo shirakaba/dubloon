@@ -1,4 +1,4 @@
-package com.anonymous.Dubloon
+package com.anonymous.Doubloon
 
 import android.os.Build
 import android.os.Bundle

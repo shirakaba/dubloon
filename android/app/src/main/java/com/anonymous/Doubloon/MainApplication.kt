@@ -1,4 +1,4 @@
-package com.anonymous.Dubloon
+package com.anonymous.Doubloon
 
 import android.app.Application
 import android.content.res.Configuration

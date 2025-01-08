@@ -8,7 +8,7 @@ import {
   type XcodeProject,
 } from "expo/config-plugins";
 
-const withDubloon: ConfigPlugin<unknown> = (config, props) => {
+const withDoubloon: ConfigPlugin<unknown> = (config, props) => {
   assertValidProps(props);
 
   config = withXcodeProject(config, async (config) => {
@@ -18,7 +18,7 @@ const withDubloon: ConfigPlugin<unknown> = (config, props) => {
 
     ensureBuildPhase({
       project,
-      buildPhaseName: "[Dubloon] Bundle and copy web app",
+      buildPhaseName: "[Doubloon] Bundle and copy web app",
       buildPhaseArgs: {
         type: "PBXShellScriptBuildPhase",
         shellPath: "/bin/sh",
@@ -38,12 +38,12 @@ const withDubloon: ConfigPlugin<unknown> = (config, props) => {
   config = withAppBuildGradle(config, async (config) => {
     if (config.modResults.language !== "groovy") {
       throw new Error(
-        `[Dubloon] Could not modify build.gradle as the file's language is "${config.modResults.language}", yet we only support Groovy.`
+        `[Doubloon] Could not modify build.gradle as the file's language is "${config.modResults.language}", yet we only support Groovy.`
       );
     }
 
-    const startAnchor = "// == Dubloon config plugin START ==";
-    const endAnchor = "// == Dubloon config plugin END ==";
+    const startAnchor = "// == Doubloon config plugin START ==";
+    const endAnchor = "// == Doubloon config plugin END ==";
     const pattern = new RegExp(`${startAnchor}[\\s\\S]*${endAnchor}`, "m");
 
     const match = pattern.exec(config.modResults.contents);
@@ -74,7 +74,7 @@ const withDubloon: ConfigPlugin<unknown> = (config, props) => {
   return config;
 };
 
-interface DubloonProps {
+interface DoubloonProps {
   /**
    * The path to the working directory for the web project. The
    * `webBuildCommands` are run from here. If specified as a relative path, it
@@ -129,32 +129,34 @@ interface DubloonProps {
   bundleDirName?: string;
 }
 
-function assertValidProps(obj: unknown): asserts obj is DubloonProps {
+function assertValidProps(obj: unknown): asserts obj is DoubloonProps {
   if (typeof obj !== "object" || obj === null) {
-    throw new Error("[Dubloon] Expected to be passed a props object.");
+    throw new Error("[Doubloon] Expected to be passed a props object.");
   }
 
   const { webOutputDir, webWorkingDirectory, webBuildCommands, bundleDirName } =
-    obj as DubloonProps;
+    obj as DoubloonProps;
   if (typeof webOutputDir !== "string") {
-    throw new Error(`[Dubloon] Expected "webOutputDir" prop to be provided.`);
+    throw new Error(`[Doubloon] Expected "webOutputDir" prop to be provided.`);
   }
 
   if (typeof webWorkingDirectory !== "string") {
     throw new Error(
-      `[Dubloon] Expected "webWorkingDirectory" prop to be provided.`
+      `[Doubloon] Expected "webWorkingDirectory" prop to be provided.`
     );
   }
 
   if (bundleDirName && typeof bundleDirName !== "string") {
     throw new Error(
-      `[Dubloon] Expected "bundleDirName" prop to be a string, if provided.`
+      `[Doubloon] Expected "bundleDirName" prop to be a string, if provided.`
     );
   }
 
   if (webBuildCommands) {
     if (typeof webBuildCommands !== "object" || webBuildCommands === null) {
-      throw new Error(`[Dubloon] Expected "webBuildCommands" to be an object.`);
+      throw new Error(
+        `[Doubloon] Expected "webBuildCommands" to be an object.`
+      );
     }
 
     const supportedPlatforms = new Set([
@@ -167,7 +169,7 @@ function assertValidProps(obj: unknown): asserts obj is DubloonProps {
     for (const [key, value] of Object.entries(webBuildCommands)) {
       if (!supportedPlatforms.has(key)) {
         throw new Error(
-          `[Dubloon] Got unsupported platform "${key}" in "webBuildCommands". Please specify only those within: ${[
+          `[Doubloon] Got unsupported platform "${key}" in "webBuildCommands". Please specify only those within: ${[
             ...supportedPlatforms,
           ]}`
         );
@@ -177,7 +179,7 @@ function assertValidProps(obj: unknown): asserts obj is DubloonProps {
         for (const subvalue of value) {
           if (typeof subvalue !== "string") {
             throw new Error(
-              `[Dubloon] Got unsupported value in "webBuildCommands" for key "${key}". For each value, please specify either a string or an array of strings.`
+              `[Doubloon] Got unsupported value in "webBuildCommands" for key "${key}". For each value, please specify either a string or an array of strings.`
             );
           }
         }
@@ -186,7 +188,7 @@ function assertValidProps(obj: unknown): asserts obj is DubloonProps {
 
       if (typeof value !== "string") {
         throw new Error(
-          `[Dubloon] Got unsupported value in "webBuildCommands" for key "${key}". For each value, please specify either a string or an array of strings.`
+          `[Doubloon] Got unsupported value in "webBuildCommands" for key "${key}". For each value, please specify either a string or an array of strings.`
         );
       }
     }
@@ -212,7 +214,7 @@ function makeGradleScript({
   webBuildCommands,
   webOutputDir,
   bundleDirName = "web",
-}: DubloonProps) {
+}: DoubloonProps) {
   webBuildCommands = {
     ...defaultWebBuildCommands,
     ...webBuildCommands,
@@ -221,21 +223,21 @@ function makeGradleScript({
   const webBuildCommand = webBuildCommands.android;
   if (!Array.isArray(webBuildCommand)) {
     throw new Error(
-      `[Dubloon] Please provide webBuildCommands.android as an array of strings, rather than a string (only non-Android platforms support both strings and arrays of strings).`
+      `[Doubloon] Please provide webBuildCommands.android as an array of strings, rather than a string (only non-Android platforms support both strings and arrays of strings).`
     );
   }
 
   const bundleDirNameNormalized = path.normalize(bundleDirName);
 
   return `
-tasks.register("dubloonBundleWebApp", Exec) {
+tasks.register("doubloonBundleWebApp", Exec) {
     workingDir = file(["node", "--print", "require('node:path').resolve('$projectRoot', '${webWorkingDirectory}')"].execute(null, rootDir).text.trim())
     commandLine = ${JSON.stringify(webBuildCommand)}
     doFirst {
-        println("[Dubloon] Building the web app...")
+        println("[Doubloon] Building the web app...")
     }
     doLast {
-        println("[Dubloon] ... Built the web app.")
+        println("[Doubloon] ... Built the web app.")
     }
 }
 
@@ -249,17 +251,17 @@ tasks.configureEach { task ->
         return;
     }
 
-    task.dependsOn("dubloonBundleWebApp");
+    task.dependsOn("doubloonBundleWebApp");
 
     task.doLast {
-        println("[Dubloon] Copying the web app build into the app bundle...");
+        println("[Doubloon] Copying the web app build into the app bundle...");
 
         copy {
             from(["node", "--print", "require('node:path').resolve('$projectRoot', '${webOutputDir}')"].execute(null, rootDir).text.trim());
             into("$rootDir/app/src/main/assets/${bundleDirNameNormalized}");
         }
 
-        println("[Dubloon] ... Copied the web app build into the app bundle.");
+        println("[Doubloon] ... Copied the web app build into the app bundle.");
     }
 }
 `.trim();
@@ -272,7 +274,7 @@ function makeXcodeShellScript(
     webBuildCommands,
     webOutputDir,
     bundleDirName = "web",
-  }: DubloonProps
+  }: DoubloonProps
 ) {
   webBuildCommands = {
     ...defaultWebBuildCommands,
@@ -305,29 +307,29 @@ fi
 # The project root by default is one level up from the ios directory
 export PROJECT_ROOT="$PROJECT_DIR"/..
 
-echo "[Dubloon] Building the web app..."
+echo "[Doubloon] Building the web app..."
 
 # With reference to node_modules/react-native/scripts/react-native-xcode.sh
 export WEB_CWD=$("$NODE_BINARY" --print "require('node:path').resolve('$PROJECT_ROOT', '${webWorkingDirectory}')")
-echo "[Dubloon] Resolved WEB_CWD as: \"$WEB_CWD\""
+echo "[Doubloon] Resolved WEB_CWD as: \"$WEB_CWD\""
 export DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH
 
 pushd "$WEB_CWD"
 ${webBuildCommandNormalized}
 popd
 
-echo "[Dubloon] ... Built the web app."
+echo "[Doubloon] ... Built the web app."
 
-echo "[Dubloon] Copying the web app build into the app bundle..."
+echo "[Doubloon] Copying the web app build into the app bundle..."
 export WEB_DIST=$("$NODE_BINARY" --print "require('node:path').resolve('$PROJECT_ROOT', '${webOutputDir}')")
-echo "[Dubloon] Resolved WEB_DIST as: \"$WEB_DIST\""
+echo "[Doubloon] Resolved WEB_DIST as: \"$WEB_DIST\""
 mkdir -vp "$DEST/${bundleDirNameNormalized}"
 cp -r "$WEB_DIST/" "$DEST/${bundleDirNameNormalized}"
-echo "[Dubloon] ... Copied the web app build into the app bundle."
+echo "[Doubloon] ... Copied the web app build into the app bundle."
 `.trim();
 }
 
-export default withDubloon;
+export default withDoubloon;
 
 /**
  * Removes all build phases matching the given name, then adds a new one in
@@ -493,18 +495,18 @@ interface PBXNativeTarget {
   isa: "PBXNativeTarget";
   /** @example '13B07F931A680F5B00A75B9A' */
   buildConfigurationList: string;
-  /** @example 'Build configuration list for PBXNativeTarget "Dubloon"' */
+  /** @example 'Build configuration list for PBXNativeTarget "Doubloon"' */
   buildConfigurationList_comment: string;
   buildPhases: Array<{ value: string; comment: string }>;
   buildRules: Array<unknown>;
   dependencies: Array<unknown>;
-  /** @example "Dubloon" */
+  /** @example "Doubloon" */
   name: string;
-  /** @example "Dubloon" */
+  /** @example "Doubloon" */
   productName: string;
   /** @example "13B07F961A680F5B00A75B9A" */
   productReference: string;
-  /** @example "Dubloon.app" */
+  /** @example "Doubloon.app" */
   productReference_comment: string;
   /** @example '"com.apple.product-type.application"' */
   productType: string;
