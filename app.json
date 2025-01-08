@@ -26,6 +26,14 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["./app.plugin.js"]
+    "plugins": [
+      [
+        "./app.plugin.js",
+        {
+          "webWorkingDirectory": "./web",
+          "webOutputDir": "./web/dist"
+        }
+      ]
+    ]
   }
 }

@@ -154,6 +154,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
 				2C29C4AB8BE1CE0D70D5302A /* [CP] Embed Pods Frameworks */,
+				2427456437DE4E428575E9DA /* [Dubloon] Bundle and copy web app */,
 			);
 			buildRules = (
 			);
@@ -315,6 +316,52 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Dubloon/Pods-Dubloon-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		2427456437DE4E428575E9DA /* [Dubloon] Bundle and copy web app */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			name = "[Dubloon] Bundle and copy web app";
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			shellPath = /bin/sh;
+			shellScript = "set -x -e
+
+if [[ \"$CONFIGURATION\" = *Debug* ]]; then
+  exit 0
+fi
+
+if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then
+  source \"$PODS_ROOT/../.xcode.env\"
+fi
+if [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then
+  source \"$PODS_ROOT/../.xcode.env.local\"
+fi
+
+# The project root by default is one level up from the ios directory
+export PROJECT_ROOT=\"$PROJECT_DIR\"/..
+
+echo \"[Dubloon] Building the web app...\"
+
+# With reference to node_modules/react-native/scripts/react-native-xcode.sh
+export WEB_CWD=\"/Users/jamie/Documents/git/Dubloon/web\"
+export DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH
+
+pushd \"$WEB_CWD\"
+\"$NODE_BINARY\" --run build
+popd
+
+echo \"[Dubloon] ... Built the web app.\"
+
+echo \"[Dubloon] Copying the web app build into the app bundle...\"
+export WEB_DIST=\"/Users/jamie/Documents/git/Dubloon/web/dist\"
+mkdir -vp \"$DEST/web\"
+cp -r \"$WEB_DIST/\" \"$DEST/web\"
+echo \"[Dubloon] ... Copied the web app build into the app bundle.\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 

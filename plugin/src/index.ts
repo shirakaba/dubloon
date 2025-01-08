@@ -1,30 +1,223 @@
+import path from "node:path";
 import {
   ConfigPlugin,
   IOSConfig,
+  type ModPlatform,
   withXcodeProject,
   type XcodeProject,
 } from "expo/config-plugins";
 
-const withDubloon: ConfigPlugin = (config) => {
-  return withXcodeProject(config, async (config) => {
+const withDubloon: ConfigPlugin<unknown> = (config, props) => {
+  assertValidProps(props);
+
+  config = withXcodeProject(config, async (config) => {
     const project = IOSConfig.XcodeUtils.getPbxproj(
       config.modRequest.projectRoot
     );
 
     ensureBuildPhase({
       project,
-      buildPhaseName: "Build web app",
+      buildPhaseName: "[Dubloon] Bundle and copy web app",
       buildPhaseArgs: {
         type: "PBXShellScriptBuildPhase",
         shellPath: "/bin/sh",
-        shellScript: 'echo "hello world!"',
+        shellScript: makeXcodeShellScript(config.modRequest.platform, {
+          ...props,
+          // FIXME: burning these env-specific paths into the build script is no
+          // good in a multi-collaborator project.
+          webWorkingDirectory: path.resolve(
+            config.modRequest.projectRoot,
+            props.webWorkingDirectory
+          ),
+          webOutputDir: path.resolve(
+            config.modRequest.projectRoot,
+            props.webOutputDir
+          ),
+        }),
       },
     });
     config.modResults = project;
 
     return config;
   });
+
+  return config;
 };
+
+interface DubloonProps {
+  /**
+   * The path to the working directory for the web project. The
+   * `webBuildCommands` are run from here. If specified as a relative path, it
+   * is resolved relative to the Expo project root (i.e. the directory that
+   * holds `app.json`). Can be an absolute path.
+   *
+   * @example "../apps/web"
+   * @example "/Users/jamie/my-web-app"
+   */
+  webWorkingDirectory: string;
+
+  /**
+   * The command to build the web app. Can be an empty string if your web app
+   * has no build step.
+   *
+   * By default, we essentially call `node --run build`, with some subtlety in
+   * order to get the path to `node` safely:
+   *
+   * - When targeting Apple platforms (iOS, tvOS, macOS, etc.), the command runs
+   * in an Xcode build phase shell script which sources environment variables
+   * from `ios/.xcode.env.local`. It defaults to `'"$NODE_BINARY" --run build'`.
+   * - When targeting Android or Windows, the command runs as a child process of
+   * the shell that launched `expo prebuild`, and inherits environment variables
+   * from that shell. The command defaults to
+   * `"\"${process.argv[0]}\" --run build"`, so it uses whichever instance of
+   * Node.js launched the app.
+   *
+   * You can override the build commands if you wish:
+   * @example { ios: "", android: "", macos: "", windows: "" }
+   * @example { ios: "\"$NODE_BINARY\" --run build", android: "/usr/local/bin/node --run build" }
+   */
+  webBuildCommands?: { [platform: string]: string };
+
+  /**
+   * @example "/Users/jamie/my-web-app/dist"
+   */
+  webOutputDir: string;
+
+  /**
+   * The directory to copy the contents of webOutputDir into. Directories with
+   * slashes will be interpreted as a nested path.
+   *
+   * - In debug mode, this may affect the dev server URL the app should request.
+   * - In release mode, this affects the file path the URL should load the
+   * bundled app from.
+   *
+   * @default "web"
+   * @example "nested/path/to/web"
+   */
+  bundleDirName?: string;
+}
+
+function assertValidProps(obj: unknown): asserts obj is DubloonProps {
+  if (typeof obj !== "object" || obj === null) {
+    throw new Error("[Dubloon] Expected to be passed a props object.");
+  }
+
+  const { webOutputDir, webWorkingDirectory, webBuildCommands, bundleDirName } =
+    obj as DubloonProps;
+  if (typeof webOutputDir !== "string") {
+    throw new Error(`[Dubloon] Expected "webOutputDir" prop to be provided.`);
+  }
+
+  if (typeof webWorkingDirectory !== "string") {
+    throw new Error(
+      `[Dubloon] Expected "webWorkingDirectory" prop to be provided.`
+    );
+  }
+
+  if (bundleDirName && typeof bundleDirName !== "string") {
+    throw new Error(
+      `[Dubloon] Expected "bundleDirName" prop to be a string, if provided.`
+    );
+  }
+
+  if (webBuildCommands) {
+    if (typeof webBuildCommands !== "object" || webBuildCommands === null) {
+      throw new Error(`[Dubloon] Expected "webBuildCommands" to be an object.`);
+    }
+
+    const supportedPlatforms = new Set([
+      "ios",
+      "macos",
+      "tvos",
+      "android",
+      "windows",
+    ]);
+    for (const [key, value] of Object.entries(webBuildCommands)) {
+      if (!supportedPlatforms.has(key)) {
+        throw new Error(
+          `[Dubloon] Got unsupported platform "${key}" in "webBuildCommands". Please specify only those within: ${[
+            ...supportedPlatforms,
+          ]}`
+        );
+      }
+
+      if (typeof value !== "string") {
+        throw new Error(
+          `[Dubloon] Got unsupported value in "webBuildCommands" for key "${key}". Please specify a string.`
+        );
+      }
+    }
+  }
+}
+
+// TODO: On Apple platforms, we're currently building and copying in the same
+// build phase. We could simplify things by doing a child process build on all
+// platforms and just using a build phase to copy the build into the bundle.
+// FIXME: Handle multiple platforms performing a release build at once.
+const xcodeBuildCommand = `"$NODE_BINARY" --run build`;
+const childProcessBuildCommand = `\"${process.argv[0]}\" --run build`;
+const defaultWebBuildCommands = {
+  ios: xcodeBuildCommand,
+  macos: xcodeBuildCommand,
+  tvos: xcodeBuildCommand,
+  windows: childProcessBuildCommand,
+  android: childProcessBuildCommand,
+};
+
+function makeXcodeShellScript(
+  platform: ModPlatform,
+  {
+    webWorkingDirectory,
+    webBuildCommands,
+    webOutputDir,
+    bundleDirName = "web",
+  }: DubloonProps
+) {
+  webBuildCommands = {
+    ...defaultWebBuildCommands,
+    ...webBuildCommands,
+  };
+  const webBuildCommand = webBuildCommands[platform];
+  if (typeof webBuildCommand === "undefined") {
+    throw new Error(`Unrecognised Apple platform "${platform}"`);
+  }
+
+  return `
+set -x -e
+
+if [[ "$CONFIGURATION" = *Debug* ]]; then
+  exit 0
+fi
+
+if [[ -f "$PODS_ROOT/../.xcode.env" ]]; then
+  source "$PODS_ROOT/../.xcode.env"
+fi
+if [[ -f "$PODS_ROOT/../.xcode.env.local" ]]; then
+  source "$PODS_ROOT/../.xcode.env.local"
+fi
+
+# The project root by default is one level up from the ios directory
+export PROJECT_ROOT="$PROJECT_DIR"/..
+
+echo "[Dubloon] Building the web app..."
+
+# With reference to node_modules/react-native/scripts/react-native-xcode.sh
+export WEB_CWD="${webWorkingDirectory}"
+export DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH
+
+pushd "$WEB_CWD"
+${webBuildCommand}
+popd
+
+echo "[Dubloon] ... Built the web app."
+
+echo "[Dubloon] Copying the web app build into the app bundle..."
+export WEB_DIST="${webOutputDir}"
+mkdir -vp "$DEST/${bundleDirName}"
+cp -r "$WEB_DIST/" "$DEST/${bundleDirName}"
+echo "[Dubloon] ... Copied the web app build into the app bundle."
+`.trim();
+}
 
 export default withDubloon;
 
