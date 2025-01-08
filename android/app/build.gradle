@@ -174,3 +174,35 @@ dependencies {
         implementation jscFlavor
     }
 }
+
+// == Dubloon config plugin START ==
+tasks.register("dubloonBundleWebApp", Exec) {
+    workingDir = file(["node", "--print", "require('node:path').resolve('$projectRoot', './web')"].execute(null, rootDir).text.trim())
+    commandLine = ["node","--run","build"]
+    doFirst {
+        println("[Dubloon] Building the web app...")
+    }
+    doLast {
+        println("[Dubloon] ... Built the web app.")
+    }
+}
+
+tasks.configureEach { task ->
+    if (task.name != 'preBuild') {
+        return;
+    }
+
+    task.dependsOn("dubloonBundleWebApp");
+
+    task.doLast {
+        println("[Dubloon] Copying the web app build into the app bundle...");
+
+        copy {
+            from(["node", "--print", "require('node:path').resolve('$projectRoot', './web/dist')"].execute(null, rootDir).text.trim());
+            into("$rootDir/app/src/main/assets/web");
+        }
+
+        println("[Dubloon] ... Copied the web app build into the app bundle.");
+    }
+}
+// == Dubloon config plugin END ==

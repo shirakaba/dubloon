@@ -1,7 +1,9 @@
+import path from "node:path";
 import {
   ConfigPlugin,
   IOSConfig,
   type ModPlatform,
+  withAppBuildGradle,
   withXcodeProject,
   type XcodeProject,
 } from "expo/config-plugins";
@@ -24,6 +26,42 @@ const withDubloon: ConfigPlugin<unknown> = (config, props) => {
       },
     });
     config.modResults = project;
+
+    return config;
+  });
+
+  config = withAppBuildGradle(config, async (config) => {
+    if (config.modResults.language !== "groovy") {
+      throw new Error(
+        `[Dubloon] Could not modify build.gradle as the file's language is "${config.modResults.language}", yet we only support Groovy.`
+      );
+    }
+
+    const startAnchor = "// == Dubloon config plugin START ==";
+    const endAnchor = "// == Dubloon config plugin END ==";
+    const pattern = new RegExp(`${startAnchor}[\\s\\S]*${endAnchor}`, "m");
+
+    const match = pattern.exec(config.modResults.contents);
+    const anchoredScript = `${startAnchor}\n${makeGradleScript(
+      props
+    )}\n${endAnchor}`;
+
+    if (match) {
+      if (match[0] === anchoredScript) {
+        // Already present, and no change needed.
+        return config;
+      }
+
+      // Already present, but needs updating.
+      const leading = config.modResults.contents.slice(0, match.index);
+      const trailing = config.modResults.contents.slice(
+        match.index + match[0].length
+      );
+
+      config.modResults.contents = `${leading}${anchoredScript}${trailing}`;
+    } else {
+      config.modResults.contents = `${config.modResults.contents.trimEnd()}\n\n${anchoredScript}\n`;
+    }
 
     return config;
   });
@@ -63,7 +101,9 @@ interface DubloonProps {
    * @example { ios: "", android: "", macos: "", windows: "" }
    * @example { ios: "\"$NODE_BINARY\" --run build", android: "/usr/local/bin/node --run build" }
    */
-  webBuildCommands?: { [platform: string]: string };
+  webBuildCommands?: {
+    [platform: string]: string | Array<string>;
+  };
 
   /**
    * @example "/Users/jamie/my-web-app/dist"
@@ -128,9 +168,20 @@ function assertValidProps(obj: unknown): asserts obj is DubloonProps {
         );
       }
 
+      if (Array.isArray(value)) {
+        for (const subvalue of value) {
+          if (typeof subvalue !== "string") {
+            throw new Error(
+              `[Dubloon] Got unsupported value in "webBuildCommands" for key "${key}". For each value, please specify either a string or an array of strings.`
+            );
+          }
+        }
+        continue;
+      }
+
       if (typeof value !== "string") {
         throw new Error(
-          `[Dubloon] Got unsupported value in "webBuildCommands" for key "${key}". Please specify a string.`
+          `[Dubloon] Got unsupported value in "webBuildCommands" for key "${key}". For each value, please specify either a string or an array of strings.`
         );
       }
     }
@@ -148,8 +199,61 @@ const defaultWebBuildCommands = {
   macos: xcodeBuildCommand,
   tvos: xcodeBuildCommand,
   windows: childProcessBuildCommand,
-  android: childProcessBuildCommand,
+  android: ["node", "--run", "build"],
 };
+
+function makeGradleScript({
+  webWorkingDirectory,
+  webBuildCommands,
+  webOutputDir,
+  bundleDirName = "web",
+}: DubloonProps) {
+  webBuildCommands = {
+    ...defaultWebBuildCommands,
+    ...webBuildCommands,
+  };
+
+  const webBuildCommand = webBuildCommands.android;
+  if (!Array.isArray(webBuildCommand)) {
+    throw new Error(
+      `[Dubloon] Please provide webBuildCommands.android as an array of strings, rather than a string (only non-Android platforms support both strings and arrays of strings).`
+    );
+  }
+
+  const bundleDirNameNormalized = path.normalize(bundleDirName);
+
+  return `
+tasks.register("dubloonBundleWebApp", Exec) {
+    workingDir = file(["node", "--print", "require('node:path').resolve('$projectRoot', '${webWorkingDirectory}')"].execute(null, rootDir).text.trim())
+    commandLine = ${JSON.stringify(webBuildCommand)}
+    doFirst {
+        println("[Dubloon] Building the web app...")
+    }
+    doLast {
+        println("[Dubloon] ... Built the web app.")
+    }
+}
+
+tasks.configureEach { task ->
+    if (task.name != 'preBuild') {
+        return;
+    }
+
+    task.dependsOn("dubloonBundleWebApp");
+
+    task.doLast {
+        println("[Dubloon] Copying the web app build into the app bundle...");
+
+        copy {
+            from(["node", "--print", "require('node:path').resolve('$projectRoot', '${webOutputDir}')"].execute(null, rootDir).text.trim());
+            into("$rootDir/app/src/main/assets/${bundleDirNameNormalized}");
+        }
+
+        println("[Dubloon] ... Copied the web app build into the app bundle.");
+    }
+}
+`.trim();
+}
 
 function makeXcodeShellScript(
   platform: ModPlatform,
@@ -168,6 +272,11 @@ function makeXcodeShellScript(
   if (typeof webBuildCommand === "undefined") {
     throw new Error(`Unrecognised Apple platform "${platform}"`);
   }
+  const webBuildCommandNormalized = Array.isArray(webBuildCommand)
+    ? webBuildCommand.join(" ")
+    : webBuildCommand;
+
+  const bundleDirNameNormalized = path.normalize(bundleDirName);
 
   return `
 set -x -e
@@ -194,7 +303,7 @@ echo "[Dubloon] Resolved WEB_CWD as: \"$WEB_CWD\""
 export DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH
 
 pushd "$WEB_CWD"
-${webBuildCommand}
+${webBuildCommandNormalized}
 popd
 
 echo "[Dubloon] ... Built the web app."
@@ -202,8 +311,8 @@ echo "[Dubloon] ... Built the web app."
 echo "[Dubloon] Copying the web app build into the app bundle..."
 export WEB_DIST=$("$NODE_BINARY" --print "require('node:path').resolve('$PROJECT_ROOT', '${webOutputDir}')")
 echo "[Dubloon] Resolved WEB_DIST as: \"$WEB_DIST\""
-mkdir -vp "$DEST/${bundleDirName}"
-cp -r "$WEB_DIST/" "$DEST/${bundleDirName}"
+mkdir -vp "$DEST/${bundleDirNameNormalized}"
+cp -r "$WEB_DIST/" "$DEST/${bundleDirNameNormalized}"
 echo "[Dubloon] ... Copied the web app build into the app bundle."
 `.trim();
 }
