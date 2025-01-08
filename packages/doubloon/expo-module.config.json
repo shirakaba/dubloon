@@ -1,17 +1,9 @@
 {
-  "platforms": [
-    "apple",
-    "android",
-    "web"
-  ],
+  "platforms": ["apple", "android"],
   "apple": {
-    "modules": [
-      "DoubloonModule"
-    ]
+    "modules": ["DoubloonModule"]
   },
   "android": {
-    "modules": [
-      "uk.co.birchlabs.doubloon.DoubloonModule"
-    ]
+    "modules": ["uk.co.birchlabs.doubloon.DoubloonModule"]
   }
 }

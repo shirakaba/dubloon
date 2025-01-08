@@ -2,7 +2,7 @@
 
 # About
 
-Launch straight into a WebView in a React Native (Expo) app.
+Launch straight into a WebView in an Expo app, like Electron and friends.
 
 _It's called "Doubloon" because that sounds a bit like the first part of "WWW"._
 
