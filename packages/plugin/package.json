@@ -1,0 +1,19 @@
+{
+  "name": "doubloon",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "files": [
+    "./build"
+  ],
+  "scripts": {
+    "build": "expo-module build plugin"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "expo-module-scripts": "^4.0.2",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "expo-device": "^7.0.1"
+  }
+}

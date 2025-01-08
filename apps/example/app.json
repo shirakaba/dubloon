@@ -30,8 +30,8 @@
       [
         "./app.plugin.js",
         {
-          "webWorkingDirectory": "./web",
-          "webOutputDir": "./web/dist"
+          "webWorkingDirectory": "../web",
+          "webOutputDir": "../web/dist"
         }
       ]
     ]
