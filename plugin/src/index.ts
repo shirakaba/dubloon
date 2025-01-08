@@ -22,7 +22,12 @@ const withDubloon: ConfigPlugin<unknown> = (config, props) => {
       buildPhaseArgs: {
         type: "PBXShellScriptBuildPhase",
         shellPath: "/bin/sh",
-        shellScript: makeXcodeShellScript(config.modRequest.platform, props),
+        // We escape line breaks as Xcode will otherwise do it anyway the moment
+        // someone edits the script via the GUI.
+        shellScript: makeXcodeShellScript(
+          config.modRequest.platform,
+          props
+        ).replaceAll("\n", "\\n"),
       },
     });
     config.modResults = project;

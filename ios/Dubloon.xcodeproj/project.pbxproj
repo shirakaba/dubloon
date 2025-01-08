@@ -154,7 +154,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
 				2C29C4AB8BE1CE0D70D5302A /* [CP] Embed Pods Frameworks */,
-				CB83A3EA5D654E4887EC0E4B /* [Dubloon] Bundle and copy web app */,
+				8E627DDD94F94F11B33A1CFF /* [Dubloon] Bundle and copy web app */,
 			);
 			buildRules = (
 			);
@@ -317,7 +317,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Dubloon/Pods-Dubloon-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CB83A3EA5D654E4887EC0E4B /* [Dubloon] Bundle and copy web app */ = {
+		8E627DDD94F94F11B33A1CFF /* [Dubloon] Bundle and copy web app */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
