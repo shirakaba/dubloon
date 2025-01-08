@@ -72,7 +72,7 @@ npm run ios --configuration Release
 #### Android
 
 ```sh
-npm run android --configuration Release
+npm run android --variant release
 ```
 
 # Installing Dubloon in your own project

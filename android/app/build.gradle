@@ -187,8 +187,13 @@ tasks.register("dubloonBundleWebApp", Exec) {
     }
 }
 
+// Crudely determine whether this is a release-mode variant.
+// We look for the task "createBundle${targetName}JsAndAssets", as it's
+// registered by React Native, so is guaranteed to be present.
+// https://github.com/facebook/react-native/blob/ec72af403ca6cc64a6c7e99b00a6a6b5d56ff2db/packages/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/TaskConfiguration.kt#L58
+def isReleaseVariant = tasks.any { it.name == "createBundleReleaseJsAndAssets" }
 tasks.configureEach { task ->
-    if (task.name != 'preBuild') {
+    if (!isReleaseVariant || task.name != 'preBuild') {
         return;
     }
 
