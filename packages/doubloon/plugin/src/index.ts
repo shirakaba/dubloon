@@ -116,10 +116,11 @@ interface DoubloonProps {
   webOutputDir: string;
 
   /**
-   * The directory to copy the contents of webOutputDir into. Directories with
-   * slashes will be interpreted as a nested path.
+   * The subdirectory, within the app bundle's assets folder, to copy the
+   * contents of webOutputDir into. A subdirectory with slashes will be
+   * interpreted as a nested path.
    *
-   * - In debug mode, this may affect the dev server URL the app should request.
+   * - In debug mode, this has no effect.
    * - In release mode, this affects the file path the URL should load the
    * bundled app from.
    *

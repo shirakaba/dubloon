@@ -9,7 +9,8 @@ class DoubloonModule : Module() {
     Name("Doubloon")
 
     Constants (
-      "isDevice" to !isRunningOnEmulator
+      "isDevice" to !isRunningOnEmulator,
+      "basePath" to "file:///android_asset/",
     )
   }
 

@@ -38,9 +38,12 @@
   "devDependencies": {
     "expo": "^52.0.23",
     "expo-module-scripts": "^4.0.2",
+    "react-native": "^0.76.5",
+    "react-native-webview": "^13.12.5",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "expo": "*"
+    "expo": "*",
+    "react-native": "*"
   }
 }
