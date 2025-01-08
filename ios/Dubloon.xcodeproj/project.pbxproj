@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,7 +28,7 @@
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-Dubloon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Dubloon.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		62A5AA2FD0044AE0B8722A2B /* Dubloon-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "Dubloon-Bridging-Header.h"; path = "Dubloon/Dubloon-Bridging-Header.h"; sourceTree = "<group>"; };
 		6C2E3173556A471DD304B334 /* Pods-Dubloon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dubloon.debug.xcconfig"; path = "Target Support Files/Pods-Dubloon/Pods-Dubloon.debug.xcconfig"; sourceTree = "<group>"; };
-		73451DA27C56F0D4B2C4EC24 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Dubloon/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		73451DA27C56F0D4B2C4EC24 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Dubloon/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-Dubloon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dubloon.release.xcconfig"; path = "Target Support Files/Pods-Dubloon/Pods-Dubloon.release.xcconfig"; sourceTree = "<group>"; };
 		98250B1BA6494D8F8C5FB086 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "Dubloon/noop-file.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Dubloon/SplashScreen.storyboard; sourceTree = "<group>"; };
@@ -154,7 +154,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
 				2C29C4AB8BE1CE0D70D5302A /* [CP] Embed Pods Frameworks */,
-				2427456437DE4E428575E9DA /* [Dubloon] Bundle and copy web app */,
+				CB83A3EA5D654E4887EC0E4B /* [Dubloon] Bundle and copy web app */,
 			);
 			buildRules = (
 			);
@@ -317,51 +317,19 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Dubloon/Pods-Dubloon-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2427456437DE4E428575E9DA /* [Dubloon] Bundle and copy web app */ = {
+		CB83A3EA5D654E4887EC0E4B /* [Dubloon] Bundle and copy web app */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
-			name = "[Dubloon] Bundle and copy web app";
 			inputPaths = (
 			);
+			name = "[Dubloon] Bundle and copy web app";
 			outputPaths = (
 			);
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -x -e
-
-if [[ \"$CONFIGURATION\" = *Debug* ]]; then
-  exit 0
-fi
-
-if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then
-  source \"$PODS_ROOT/../.xcode.env\"
-fi
-if [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then
-  source \"$PODS_ROOT/../.xcode.env.local\"
-fi
-
-# The project root by default is one level up from the ios directory
-export PROJECT_ROOT=\"$PROJECT_DIR\"/..
-
-echo \"[Dubloon] Building the web app...\"
-
-# With reference to node_modules/react-native/scripts/react-native-xcode.sh
-export WEB_CWD=\"/Users/jamie/Documents/git/Dubloon/web\"
-export DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH
-
-pushd \"$WEB_CWD\"
-\"$NODE_BINARY\" --run build
-popd
-
-echo \"[Dubloon] ... Built the web app.\"
-
-echo \"[Dubloon] Copying the web app build into the app bundle...\"
-export WEB_DIST=\"/Users/jamie/Documents/git/Dubloon/web/dist\"
-mkdir -vp \"$DEST/web\"
-cp -r \"$WEB_DIST/\" \"$DEST/web\"
-echo \"[Dubloon] ... Copied the web app build into the app bundle.\"";
+			shellScript = "set -x -e\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  exit 0\nfi\n\nif [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\necho \"[Dubloon] Building the web app...\"\n\n# With reference to node_modules/react-native/scripts/react-native-xcode.sh\nexport WEB_CWD=$(\"$NODE_BINARY\" --print \"require('node:path').resolve('$PROJECT_ROOT', './web')\")\necho \"[Dubloon] Resolved WEB_CWD as: \"$WEB_CWD\"\"\nexport DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\n\npushd \"$WEB_CWD\"\n\"$NODE_BINARY\" --run build\npopd\n\necho \"[Dubloon] ... Built the web app.\"\n\necho \"[Dubloon] Copying the web app build into the app bundle...\"\nexport WEB_DIST=$(\"$NODE_BINARY\" --print \"require('node:path').resolve('$PROJECT_ROOT', './web/dist')\")\necho \"[Dubloon] Resolved WEB_DIST as: \"$WEB_DIST\"\"\nmkdir -vp \"$DEST/web\"\ncp -r \"$WEB_DIST/\" \"$DEST/web\"\necho \"[Dubloon] ... Copied the web app build into the app bundle.\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -395,7 +363,10 @@ echo \"[Dubloon] ... Copied the web app build into the app bundle.\"";
 				);
 				INFOPLIST_FILE = Dubloon/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -423,7 +394,10 @@ echo \"[Dubloon] ... Copied the web app build into the app bundle.\"";
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Dubloon/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -488,14 +462,14 @@ echo \"[Dubloon] ... Copied the web app build into the app bundle.\"";
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -544,13 +518,13 @@ echo \"[Dubloon] ... Copied the web app build into the app bundle.\"";
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

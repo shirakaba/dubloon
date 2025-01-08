@@ -1,4 +1,3 @@
-import path from "node:path";
 import {
   ConfigPlugin,
   IOSConfig,
@@ -21,19 +20,7 @@ const withDubloon: ConfigPlugin<unknown> = (config, props) => {
       buildPhaseArgs: {
         type: "PBXShellScriptBuildPhase",
         shellPath: "/bin/sh",
-        shellScript: makeXcodeShellScript(config.modRequest.platform, {
-          ...props,
-          // FIXME: burning these env-specific paths into the build script is no
-          // good in a multi-collaborator project.
-          webWorkingDirectory: path.resolve(
-            config.modRequest.projectRoot,
-            props.webWorkingDirectory
-          ),
-          webOutputDir: path.resolve(
-            config.modRequest.projectRoot,
-            props.webOutputDir
-          ),
-        }),
+        shellScript: makeXcodeShellScript(config.modRequest.platform, props),
       },
     });
     config.modResults = project;
@@ -202,7 +189,8 @@ export PROJECT_ROOT="$PROJECT_DIR"/..
 echo "[Dubloon] Building the web app..."
 
 # With reference to node_modules/react-native/scripts/react-native-xcode.sh
-export WEB_CWD="${webWorkingDirectory}"
+export WEB_CWD=$("$NODE_BINARY" --print "require('node:path').resolve('$PROJECT_ROOT', '${webWorkingDirectory}')")
+echo "[Dubloon] Resolved WEB_CWD as: \"$WEB_CWD\""
 export DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH
 
 pushd "$WEB_CWD"
@@ -212,7 +200,8 @@ popd
 echo "[Dubloon] ... Built the web app."
 
 echo "[Dubloon] Copying the web app build into the app bundle..."
-export WEB_DIST="${webOutputDir}"
+export WEB_DIST=$("$NODE_BINARY" --print "require('node:path').resolve('$PROJECT_ROOT', '${webOutputDir}')")
+echo "[Dubloon] Resolved WEB_DIST as: \"$WEB_DIST\""
 mkdir -vp "$DEST/${bundleDirName}"
 cp -r "$WEB_DIST/" "$DEST/${bundleDirName}"
 echo "[Dubloon] ... Copied the web app build into the app bundle."
