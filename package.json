@@ -3,7 +3,9 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {},
-  "dependencies": {},
+  "dependencies": {
+    "expo": "^52.0.23"
+  },
   "devDependencies": {},
   "workspaces": [
     "apps/*",

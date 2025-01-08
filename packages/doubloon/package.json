@@ -2,11 +2,14 @@
   "name": "doubloon",
   "version": "1.0.0",
   "main": "index.ts",
+  "react-native": "src/index.ts",
   "files": [
-    "./build"
+    "./plugin/build"
   ],
   "scripts": {
-    "build": "expo-module build plugin"
+    "dev:module": "expo-module build",
+    "dev:plugin": "expo-module build plugin",
+    "build": "EXPO_NONINTERACTIVE=1 expo-module build && EXPO_NONINTERACTIVE=1 expo-module build plugin"
   },
   "dependencies": {},
   "devDependencies": {

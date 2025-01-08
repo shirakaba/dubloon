@@ -89,4 +89,4 @@ npm run android --variant release
 
 # Installing Doubloon in your own project
 
-The Doubloon example app (`apps/example`) is powered by an Expo config plugin (`packages/plugin`), which you can install in your own projects.
+The Doubloon example app (`apps/example`) is powered by an Expo config plugin (`packages/doubloon`), which you can install in your own projects.
