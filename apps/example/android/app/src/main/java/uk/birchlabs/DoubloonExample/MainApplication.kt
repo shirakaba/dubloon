@@ -1,4 +1,4 @@
-package com.anonymous.Doubloon
+package uk.birchlabs.DoubloonExample
 
 import android.app.Application
 import android.content.res.Configuration
