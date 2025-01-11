@@ -30,7 +30,7 @@
       [
         "dubloon",
         {
-          "webWorkingDirectory": "../web",
+          "webWorkingDir": "../web",
           "webOutputDir": "../web/dist"
         }
       ]
