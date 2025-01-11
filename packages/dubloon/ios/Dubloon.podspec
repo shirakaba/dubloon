@@ -4,6 +4,10 @@ package = JSON.parse(File.read(File.join(__dir__, '..', 'package.json')))
 
 Pod::Spec.new do |s|
   s.name           = 'Dubloon'
+  # Note: if we couple the version to the package.json, then users will end up
+  # updating the CocoaPod on each new update of the npm package. If we find that
+  # the native code isn't updating anything like as often as the JS code, we
+  # might want to consider decoupling the versioning.
   s.version        = package['version']
   s.summary        = package['description']
   s.description    = package['description']
