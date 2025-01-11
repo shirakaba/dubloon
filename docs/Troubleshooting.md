@@ -315,3 +315,9 @@ export function Two() {
   );
 }
 ```
+
+## The release build is failing
+
+By default, the release build uses the `node --run build` command. The [--run](https://nodejs.org/docs/latest/api/cli.html#--run) flag was only introduced in Node.js v22.0.0, so make sure that your Node.js is up to date.
+
+This command is essentially equivalent to `npm run build`, so it assumes that your web app, located at the directory you configured in `app.json` via the [webWorkingDir](https://shirakaba.github.io/dubloon/plugin/~/DubloonProps.html#property_webworkingdir) option, has an npm script field named `"build"` in its `package.json`.

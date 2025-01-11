@@ -23,6 +23,8 @@ _It's called "Dubloon" (based on [doubloon](https://en.wikipedia.org/wiki/Doublo
 
 ## Installation
 
+Dubloon is intended to be used together with [react-native-webview](https://github.com/react-native-webview/react-native-webview), so make sure you install both.
+
 ```sh
 npm install dubloon react-native-webview
 ```
@@ -50,10 +52,44 @@ Configure your Expo app's `app.json` file to use the Dubloon Expo Config plugin:
 
 _See our [plugin docs](https://shirakaba.github.io/dubloon/plugin/~/DubloonProps.html) for documentation on the options._
 
-Finally, apply the Config Plugin via Expo [Prebuild](https://docs.expo.dev/workflow/continuous-native-generation/#usage):
+Finally, apply the Config Plugin by running Expo [Prebuild](https://docs.expo.dev/workflow/continuous-native-generation/#usage):
 
 ```sh
 npx expo prebuild --clean
+```
+
+## Running
+
+Dubloon behaves differently between debug mode and release mode.
+
+### Debug mode
+
+In **debug mode**, your Expo app will load the web app from your web app's dev server (it is your responsibility to provide one - see our example web app at [apps/web](apps/web) for reference).
+
+We recommend starting with an iOS simulator as the case that "just works". See the [Troubleshooting docs](docs/Troubleshooting.md) if the app unexpectedly starts up with a blank WebView.
+
+```sh
+# In terminal 1: Start up your web app's dev server
+cd path/to/web/app
+npm run dev
+
+# In terminal 2: Run your Expo app as usual.
+cd path/to/expo/app
+npm run ios
+# or
+npm run android
+```
+
+### Release mode
+
+In **release mode**, your Expo app will trigger a build of the web app. It'll then bundle it into the native app's bundle, so no dev server is needed.
+
+By default, it runs `node --run build` (which is simply Node's own [equivalent](https://nodejs.org/docs/latest/api/cli.html#--run) of `npm run build`) in the configured [webWorkingDir](https://shirakaba.github.io/dubloon/plugin/~/DubloonProps.html#property_webworkingdir). See our [plugin docs](https://shirakaba.github.io/dubloon/plugin/~/DubloonProps.html) for more full details, or if you want to [customise the build command](https://shirakaba.github.io/dubloon/plugin/~/DubloonProps.webBuildCommands.html).
+
+```sh
+npm run ios --configuration Release
+# or
+npm run android --variant release
 ```
 
 # Running the demo
