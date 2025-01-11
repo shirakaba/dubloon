@@ -1,7 +1,7 @@
 PODS:
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
-  - Dubloon (0.0.1-beta.1):
+  - Dubloon (0.0.1-beta.2):
     - ExpoModulesCore
   - EXConstants (17.0.3):
     - ExpoModulesCore
@@ -1800,7 +1800,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
-  Dubloon: 709d05d514d19d374ded3537bdaaef246ce5c967
+  Dubloon: efdce8b0ac1a0edea3ea0a56afae09dd7d1977e1
   EXConstants: dd2fe64c6cdb1383b694c309a63028a8e9f2be6d
   Expo: 37cea4167605a3a1b88fa0caf8349ae76c0d389c
   ExpoAsset: 8138f2a9ec55ae1ad7c3871448379f7d97692d15
