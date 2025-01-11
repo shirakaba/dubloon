@@ -28,7 +28,7 @@
     },
     "plugins": [
       [
-        "./app.plugin.js",
+        "doubloon",
         {
           "webWorkingDirectory": "../web",
           "webOutputDir": "../web/dist"

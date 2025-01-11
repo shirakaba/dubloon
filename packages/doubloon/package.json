@@ -1,7 +1,6 @@
 {
   "name": "doubloon",
   "version": "1.0.0",
-  "main": "plugin/build/index.js",
   "react-native": "build/index.js",
   "types": "build/index.d.ts",
   "description": "Launch straight into a WebView in an Expo app, like Electron and friends.",
