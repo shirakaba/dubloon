@@ -3,7 +3,7 @@
   "version": "0.0.1-beta.1",
   "react-native": "build/index.js",
   "types": "build/index.d.ts",
-  "description": "Launch straight into a WebView in an Expo app, like Electron and friends.",
+  "description": "An Expo Config Plugin for embedding a web app inside a React Native (Expo) app.",
   "files": [
     "LICENSE-expo.txt",
     "build",
@@ -17,14 +17,14 @@
     "prepublishOnly": "EXPO_NONINTERACTIVE=1 expo-module prepublishOnly"
   },
   "keywords": [
-    "react-native",
-    "expo",
-    "electron",
-    "tauri",
-    "capacitor",
-    "phonegap",
-    "ionic",
-    "cordova"
+    "Capacitor",
+    "Cordova",
+    "Electron",
+    "Expo",
+    "Ionic",
+    "Phonegap",
+    "React Native",
+    "Tauri"
   ],
   "repository": "https://github.com/shirakaba/dubloon",
   "bugs": {
@@ -43,6 +43,7 @@
   },
   "peerDependencies": {
     "expo": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-webview": "*"
   }
 }
