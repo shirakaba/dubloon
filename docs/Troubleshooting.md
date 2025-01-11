@@ -116,18 +116,13 @@ export function Four() {
 
 ##### iOS
 
-If the iOS device is on the same LAN as a Mac and/or connected by cable to a Mac, I _think_ this works by magic, but don't really understand how.
+If the iOS device is on the same LAN as the Mac running the web app's dev server, then the WebView should connect as long as the dev server is bound to host `0.0.0.0`. See **"Error connecting to web app's dev server when running in debug mode"** for more details.
 
-Otherwise, follow the same instructions as Android below to set up networking over WAN.
+In future, we may support connecting over explicit WAN addresses (e.g. to an [ngrok](https://ngrok.com) or [Cloudflare Tunnel](https://developers.cloudflare.com/pages/how-to/preview-with-cloudflare-tunnel/) endpoint reverse-proxied from your local loopback) as an alternative approach.
 
 ##### Android
 
-The device will need to connect to a WAN address instead of local loopback. So:
-
-- The web app's dev server will have to bind to `0.0.0.0`. Alternatively, you could reverse-proxy your local loopback to a WAN address via something like [ngrok](https://ngrok.com) or [Cloudflare Tunnel](https://developers.cloudflare.com/pages/how-to/preview-with-cloudflare-tunnel/).
-- The Dubloon WebView will have to be configured to connect to that WAN address rather than local loopback.
-
-TODO: support and document this.
+Not yet supported. Work in progress!
 
 #### Virtual devices
 
@@ -321,3 +316,37 @@ export function Two() {
 By default, the release build uses the `node --run build` command. The [--run](https://nodejs.org/docs/latest/api/cli.html#--run) flag was only introduced in Node.js v22.0.0, so make sure that your Node.js is up to date.
 
 This command is essentially equivalent to `npm run build`, so it assumes that your web app, located at the directory you configured in `app.json` via the [webWorkingDir](https://shirakaba.github.io/dubloon/plugin/~/DubloonProps.html#property_webworkingdir) option, has an npm script field named `"build"` in its `package.json`.
+
+## Error connecting to web app's dev server when running in debug mode
+
+### iOS
+
+If your WebView displays this error:
+
+> **Error loading page**
+>
+> Domain: NSURLErrorDomain
+> Error Code: -1004
+> Description: Could not connect to the server.
+
+… it means that the native app can't connect to the web app's dev server.
+
+Go through this sanity check, based on which device type you're using.
+
+#### Simulator
+
+- Your web app's dev server is bound to either of these hosts:
+  - `127.0.0.1` (i.e. the IPv4 local loopback).
+  - `0.0.0.0` (i.e. all interfaces). This is recommended as it is needed to support physical devices, but be wary that it means any device on the network can connect to it (so don't use for confidential work).
+- You're passing into the WebView the props from `connectionProps`, e.g. `<WebView {...connectionProps({ port: 8080 })} />` (where port `8080` would be the port that your web app's dev server is running on).
+- You can successfully connect to the web app's dev server's URL on macOS Safari.
+
+#### Physical device
+
+- Your web app's dev server is binding to host `0.0.0.0` (i.e. all interfaces).
+- You're passing into the WebView the props from `connectionProps`, e.g. `<WebView {...connectionProps({ port: 8080 })} />` (where port `8080` would be the port that your web app's dev server is running on).
+- You can successfully connect to the web app's dev server's URL (e.g. http://192.168.11.2:8080) on iOS Safari.
+
+### Android
+
+🏗️ Instructions to come.

@@ -49,13 +49,19 @@ export function connectionProps({
      */
     const localLoopbackIPv4 = "127.0.0.1";
 
+    // TODO: once we support `packagerHost` for Android, use it for all device
+    // types on all platforms, except for Android emulator.
+    const ipForDevice = DubloonModule.isDevice
+      ? DubloonModule.packagerHost
+      : localLoopbackIPv4;
+
     const uri =
       Platform.OS === "android"
         ? // TODO: if it's a real Android device (check via
           // DubloonModule.isDevice), we may need to connect to a WAN address
           // instead. Will have to look into available options.
           `http://${androidEmulatorHost}:${port}/`
-        : `http://${localLoopbackIPv4}:${port}/`;
+        : `http://${ipForDevice}:${port}/`;
 
     return {
       source: { uri },
