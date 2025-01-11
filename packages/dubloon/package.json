@@ -5,8 +5,12 @@
   "types": "build/index.d.ts",
   "description": "An Expo Config Plugin for embedding a web app inside a React Native (Expo) app.",
   "files": [
-    "LICENSE-expo.txt",
+    "app.plugin.js",
+    "android",
     "build",
+    "expo-module.config.json",
+    "ios",
+    "LICENSE-expo.txt",
     "plugin/build"
   ],
   "scripts": {
