@@ -14,7 +14,7 @@
     "plugin/build"
   ],
   "scripts": {
-    "dev:module": "expo-module build",
+    "dev:api": "expo-module build",
     "dev:plugin": "expo-module build plugin",
     "build": "EXPO_NONINTERACTIVE=1 expo-module build && EXPO_NONINTERACTIVE=1 expo-module build plugin",
     "prepare": "EXPO_NONINTERACTIVE=1 expo-module prepare",

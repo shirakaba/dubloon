@@ -1,0 +1,60 @@
+# With reference to https://github.com/actions/starter-workflows/tree/main/pages
+name: Generate and Deploy Docs
+
+on:
+  push:
+    paths:
+      - "packages/dubloon/plugin/src/DubloonProps.types.ts"
+
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      # This should go before the docs generation step, as it can inject
+      # variables into static site generators in case we ever need them.
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      # To use `node --run docs` we'd have to install Node.js 22 (the current
+      # Ubuntu 24.04 image only includes Node.js v20.18.1).
+      # https://github.com/actions/runner-images?tab=readme-ov-file#available-images
+      - name: Generate documentation
+        run: npm run docs
+
+      - name: Upload artifact for deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

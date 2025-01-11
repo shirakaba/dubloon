@@ -39,8 +39,8 @@ Configure your Expo app's `app.json` file to use the Dubloon Expo Config plugin:
       [
         "dubloon",
         {
-          "webWorkingDir": "path/to/web/app",
-          "webOutputDir": "path/to/web/app/build"
+          "webWorkingDir": "../path/to/web/app",
+          "webOutputDir": "../path/to/web/app/build"
         }
       ]
     ]
@@ -48,7 +48,7 @@ Configure your Expo app's `app.json` file to use the Dubloon Expo Config plugin:
 }
 ```
 
-_See the `DubloonProps` interface in [packages/dubloon/plugin/src/DubloonProps.types.ts](packages/dubloon/plugin/src/DubloonProps.types.ts) for documentation on the options._
+_See our [plugin docs](https://shirakaba.github.io/dubloon/plugin/~/DubloonProps.html) for documentation on the options._
 
 Finally, apply the Config Plugin via Expo [Prebuild](https://docs.expo.dev/workflow/continuous-native-generation/#usage):
 
@@ -58,4 +58,4 @@ npx expo prebuild --clean
 
 # Running the demo
 
-See [apps/example/README.md](apps/web/README.md).
+See [apps/example/README.md](apps/example/README.md).

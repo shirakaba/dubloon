@@ -2,7 +2,9 @@
   "name": "dubloon-monorepo",
   "private": true,
   "version": "0.0.1",
-  "scripts": {},
+  "scripts": {
+    "docs": "deno doc --html --output=\"docs/plugin\" --name=\"Dubloon Config Plugin docs\" packages/dubloon/plugin/src/DubloonProps.types.ts"
+  },
   "dependencies": {
     "expo": "^52.0.23"
   },
