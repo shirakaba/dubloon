@@ -1,4 +1,4 @@
-<h1 align="center">The Doubloon example Expo app 📱</h2>
+<h1 align="center">The Dubloon example Expo app 📱</h2>
 
 This Expo app loads the web app in [apps/web](/apps/web) into a WebView.
 

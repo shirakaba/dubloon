@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "DoubloonExample",
-    "slug": "DoubloonExample",
+    "name": "DubloonExample",
+    "slug": "DubloonExample",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,21 +14,21 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "uk.birchlabs.DoubloonExample"
+      "bundleIdentifier": "uk.birchlabs.DubloonExample"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "uk.birchlabs.DoubloonExample"
+      "package": "uk.birchlabs.DubloonExample"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [
-        "doubloon",
+        "dubloon",
         {
           "webWorkingDirectory": "../web",
           "webOutputDir": "../web/dist"

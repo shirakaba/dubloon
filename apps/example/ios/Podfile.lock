@@ -1,7 +1,7 @@
 PODS:
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
-  - Doubloon (1.0.0):
+  - Dubloon (0.0.1-beta.1):
     - ExpoModulesCore
   - EXConstants (17.0.3):
     - ExpoModulesCore
@@ -1573,7 +1573,7 @@ PODS:
 DEPENDENCIES:
   - boost (from `../../../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - Doubloon (from `../../../packages/doubloon/ios`)
+  - Dubloon (from `../../../packages/dubloon/ios`)
   - EXConstants (from `../../../node_modules/expo-constants/ios`)
   - Expo (from `../../../node_modules/expo`)
   - ExpoAsset (from `../../../node_modules/expo-asset/ios`)
@@ -1655,8 +1655,8 @@ EXTERNAL SOURCES:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/boost.podspec"
   DoubleConversion:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
-  Doubloon:
-    :path: "../../../packages/doubloon/ios"
+  Dubloon:
+    :path: "../../../packages/dubloon/ios"
   EXConstants:
     :path: "../../../node_modules/expo-constants/ios"
   Expo:
@@ -1800,7 +1800,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
-  Doubloon: 474bee10fec69e8c2f56da0cc6fc0b2ec31ae200
+  Dubloon: 709d05d514d19d374ded3537bdaaef246ce5c967
   EXConstants: dd2fe64c6cdb1383b694c309a63028a8e9f2be6d
   Expo: 37cea4167605a3a1b88fa0caf8349ae76c0d389c
   ExpoAsset: 8138f2a9ec55ae1ad7c3871448379f7d97692d15
@@ -1872,6 +1872,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: c7ea4c36c1d78ebbf45529b6e78283e4e0fe4956
 
-PODFILE CHECKSUM: 5b7e794a00e2b65d085fcb78489a9c1a71d88edf
+PODFILE CHECKSUM: 05087ccfd4dd5b829d3299d0f63ebb29c06a6338
 
 COCOAPODS: 1.16.2

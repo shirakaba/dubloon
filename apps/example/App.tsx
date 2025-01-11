@@ -1,4 +1,4 @@
-import { connectionProps } from "doubloon";
+import { connectionProps } from "dubloon";
 import WebView from "react-native-webview";
 
 export default function App() {

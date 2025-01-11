@@ -1,6 +1,6 @@
-<h1 align="center">The Doubloon example web app 🌐</h2>
+<h1 align="center">The Dubloon example web app 🌐</h2>
 
-This web app is loaded into a WebView by the Doubloon example Expo app in [apps/example](/apps/example).
+This web app is loaded into a WebView by the Dubloon example Expo app in [apps/example](/apps/example).
 
 # How to run the web app
 

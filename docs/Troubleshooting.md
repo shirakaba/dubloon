@@ -8,7 +8,7 @@ Perform the following sanity checks.
 
 ### Is the dev server for the web app running?
 
-When developing in **debug** mode (rather than **release** mode), the Doubloon WebView expects to connect to a local web dev server (e.g. Vite, Webpack, Rollup, etc.). Make sure it's running.
+When developing in **debug** mode (rather than **release** mode), the Dubloon WebView expects to connect to a local web dev server (e.g. Vite, Webpack, Rollup, etc.). Make sure it's running.
 
 For example, in this monorepo, you can run the web dev server as follows:
 
@@ -20,7 +20,7 @@ npm run dev
 This logs out the following:
 
 ```sh
-> doubloon-web-app@0.0.0 dev
+> dubloon-web-app@0.0.0 dev
 > vite --host 127.0.0.1 --port 5173
 
   VITE v6.0.7  ready in 84 ms
@@ -31,7 +31,7 @@ This logs out the following:
 
 You can try connecting to it by visiting http://127.0.0.1:5173/ in your desktop web browser.
 
-### Is the Doubloon WebView connecting to the correct address for the web app's dev server?
+### Is the Dubloon WebView connecting to the correct address for the web app's dev server?
 
 In this monorepo, our example web app in `apps/web` has a command `npm run dev` that runs a dev server on port 5173 (the default for Vite apps). However, your own web app's dev server might run on a different port.
 
@@ -40,7 +40,7 @@ Most bundlers log the address that they bind to on startup. You can usually conf
 Once you know the port, you can configure it in the options for `connectionProps()`:
 
 ```tsx
-import { connectionProps } from "doubloon";
+import { connectionProps } from "dubloon";
 import WebView from "react-native-webview";
 
 export default function MyWebView() {
@@ -50,7 +50,7 @@ export default function MyWebView() {
 
 ### Is the web app displaying in a desktop web browser as expected?
 
-Before debugging the Doubloon WebView itself, it's worth visiting your web app in a desktop web browser (see **"Is the dev server for the web app running?"** for instructions) to check that it appears as expected.
+Before debugging the Dubloon WebView itself, it's worth visiting your web app in a desktop web browser (see **"Is the dev server for the web app running?"** for instructions) to check that it appears as expected.
 
 For example, when setting up the example web app for this monorepo, I found that it was rendering a blank page because my monorepo had two different versions of React installed.
 
@@ -125,7 +125,7 @@ Otherwise, follow the same instructions as Android below to set up networking ov
 The device will need to connect to a WAN address instead of local loopback. So:
 
 - The web app's dev server will have to bind to `0.0.0.0`. Alternatively, you could reverse-proxy your local loopback to a WAN address via something like [ngrok](https://ngrok.com) or [Cloudflare Tunnel](https://developers.cloudflare.com/pages/how-to/preview-with-cloudflare-tunnel/).
-- The Doubloon WebView will have to be configured to connect to that WAN address rather than local loopback.
+- The Dubloon WebView will have to be configured to connect to that WAN address rather than local loopback.
 
 TODO: support and document this.
 
@@ -141,7 +141,7 @@ This should also "just work". If not, pleaset review https://developer.android.c
 
 ### Does your app have local networking enabled?
 
-Both React Native and Expo apps are **set up correctly by default** for local networking (because they need it for communicating with Metro when running in debug mode), so the Doubloon Expo Config mod does not bother applying any changes to the `Info.plist` files. However, we document the expected state below just in case.
+Both React Native and Expo apps are **set up correctly by default** for local networking (because they need it for communicating with Metro when running in debug mode), so the Dubloon Expo Config mod does not bother applying any changes to the `Info.plist` files. However, we document the expected state below just in case.
 
 <details>
 <summary>Show</summary>

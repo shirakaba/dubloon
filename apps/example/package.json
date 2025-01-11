@@ -1,5 +1,5 @@
 {
-  "name": "doubloon-example-app",
+  "name": "dubloon-example-app",
   "private": true,
   "version": "0.0.1",
   "main": "index.ts",
@@ -9,7 +9,7 @@
     "ios": "expo run:ios"
   },
   "dependencies": {
-    "doubloon": "workspace:*",
+    "dubloon": "workspace:*",
     "expo": "~52.0.23",
     "react": "18.3.1",
     "react-native": "0.76.5",
