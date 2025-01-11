@@ -2,7 +2,7 @@ import { Platform } from "react-native";
 import type { WebViewProps } from "react-native-webview";
 import { default as DoubloonModule } from "./DoubloonModule";
 
-export function getWebViewProps({
+export function connectionProps({
   port,
   bundleDirName = "web",
   path = "/index.html",
