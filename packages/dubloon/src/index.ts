@@ -35,12 +35,6 @@ export function connectionProps({
 }) {
   if (__DEV__) {
     /**
-     * This "magic" host maps to 127.0.0.1.
-     * @see https://developer.android.com/studio/run/emulator-networking.html
-     */
-    const androidEmulatorHost = "10.0.2.2";
-
-    /**
      * We explicitly use 127.0.0.1 because that's what the Android emulator maps
      * to. This avoids problems on IPv6 setups where localhost may map to ::1.
      *
@@ -49,19 +43,47 @@ export function connectionProps({
      */
     const localLoopbackIPv4 = "127.0.0.1";
 
-    // TODO: once we support `packagerHost` for Android, use it for all device
-    // types on all platforms, except for Android emulator.
-    const ipForDevice = DubloonModule.isDevice
-      ? DubloonModule.packagerHost
-      : localLoopbackIPv4;
+    // We work out the
+    let host: string;
+    switch (Platform.OS) {
+      case "ios": {
+        // React Native iOS physical devices connect to the packager over a LAN
+        // IP, e.g. http://192.168.11.2:8081, which we retrieve from
+        // `DubloonModule.packagerHost`.
+        host = DubloonModule.isDevice
+          ? DubloonModule.packagerHost
+          : localLoopbackIPv4;
+        break;
+      }
+      case "android": {
+        /**
+         * This "magic" host maps to 127.0.0.1 on Android Virtual Devices.
+         *
+         * Apparently it's instead 10.0.2.3 on Genymotion devices though, and
+         * it's presumably possible to configure it, so we'd better handle those
+         * cases in future.
+         * @see https://developer.android.com/studio/run/emulator-networking.html
+         * @see https://stackoverflow.com/a/26072075/5951226
+         */
+        const androidEmulatorHost = "10.0.2.2";
 
-    const uri =
-      Platform.OS === "android"
-        ? // TODO: if it's a real Android device (check via
-          // DubloonModule.isDevice), we may need to connect to a WAN address
-          // instead. Will have to look into available options.
-          `http://${androidEmulatorHost}:${port}/`
-        : `http://${ipForDevice}:${port}/`;
+        // React Native Android physical devices connect either via:
+        //
+        // - the explicit host configured in the in-app Dev Menu (as recommended
+        //   when [connecting over Wi-Fi](https://reactnative.dev/docs/running-on-device#method-2-connect-via-wi-fi)).
+        // - or via ws://localhost:8081 (and thus relies on reverse-proxying localhost
+        //   via [adb reverse](https://reactnative.dev/docs/running-on-device#method-1-using-adb-reverse-recommended), e.g. via
+        //   `adb -s HA1K19BG reverse tcp:8081 tcp:8081`.
+        host = DubloonModule.isDevice ? localLoopbackIPv4 : androidEmulatorHost;
+        break;
+      }
+      default: {
+        host = localLoopbackIPv4;
+        break;
+      }
+    }
+
+    const uri = `http://${host}:${port}/`;
 
     return {
       source: { uri },

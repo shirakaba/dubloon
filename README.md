@@ -29,7 +29,7 @@ Dubloon is intended to be used together with [react-native-webview](https://gith
 npm install dubloon react-native-webview
 ```
 
-## Configuration
+## Setup
 
 Configure your Expo app's `app.json` file to use the Dubloon Expo Config plugin:
 
@@ -58,6 +58,18 @@ Finally, apply the Config Plugin by running Expo [Prebuild](https://docs.expo.de
 npx expo prebuild --clean
 ```
 
+## Usage
+
+```tsx
+import { connectionProps } from "dubloon";
+import WebView from "react-native-webview";
+
+export default function App() {
+  // Where "8080" is the port for your web app's dev server.
+  return <WebView {...connectionProps({ port: 8080 })} />;
+}
+```
+
 ## Running
 
 Dubloon behaves differently between debug mode and release mode.
@@ -66,19 +78,23 @@ Dubloon behaves differently between debug mode and release mode.
 
 In **debug mode**, your Expo app will load the web app from your web app's dev server (it is your responsibility to provide one - see our example web app at [apps/web](apps/web) for reference).
 
-We recommend starting with an iOS simulator as the case that "just works". See the [Troubleshooting docs](docs/Troubleshooting.md) if the app unexpectedly starts up with a blank WebView.
-
 ```sh
-# In terminal 1: Start up your web app's dev server
+# In terminal 1: Start up your web app's dev server.
 cd path/to/web/app
 npm run dev
 
 # In terminal 2: Run your Expo app as usual.
 cd path/to/expo/app
+# Running in debug mode may work out of the box, or require extra steps:
+# - iOS simulator:           ✅
+# - Android emulator:        ✅
+# - iOS physical device:     may require extra steps.
+# - Android physical device: will require extra steps.
 npm run ios
-# or
 npm run android
 ```
+
+If the app unexpectedly starts up with a blank WebView, or if you want to run on a **physical device**, see the [Troubleshooting docs](docs/Troubleshooting.md).
 
 ### Release mode
 

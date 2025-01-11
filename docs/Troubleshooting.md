@@ -2,7 +2,7 @@
 
 This page details solutions to common issues.
 
-## The WebView is empty
+## The WebView is blank/empty
 
 Perform the following sanity checks.
 
@@ -112,27 +112,68 @@ export function Four() {
 
 ### Is your networking set up correctly?
 
-#### Physical devices
+#### iOS
 
-##### iOS
+If your WebView is blank, or displays this error:
 
-If the iOS device is on the same LAN as the Mac running the web app's dev server, then the WebView should connect as long as the dev server is bound to host `0.0.0.0`. See **"Error connecting to web app's dev server when running in debug mode"** for more details.
+> **Error loading page**
+>
+> Domain: NSURLErrorDomain
+> Error Code: -1004
+> Description: Could not connect to the server.
 
-In future, we may support connecting over explicit WAN addresses (e.g. to an [ngrok](https://ngrok.com) or [Cloudflare Tunnel](https://developers.cloudflare.com/pages/how-to/preview-with-cloudflare-tunnel/) endpoint reverse-proxied from your local loopback) as an alternative approach.
+… it means that the native app can't connect to the web app's dev server.
 
-##### Android
+Go through this sanity check, based on which device type you're using. Ensure that:
 
-Not yet supported. Work in progress!
+##### Simulator
 
-#### Virtual devices
+- Your web app's dev server is bound to either of these hosts:
+  - `127.0.0.1` (i.e. the IPv4 local loopback).
+  - `0.0.0.0` (i.e. all interfaces). This is recommended as it is needed to support physical devices, but be wary that it means any device on the network can connect to it (so don't use for confidential work).
+- You're passing into the WebView the props from `connectionProps`, e.g. `<WebView {...connectionProps({ port: 8080 })} />` (where port `8080` would be the port that your web app's dev server is running on).
+- You can successfully connect to the web app's dev server's URL on macOS Safari.
 
-##### iOS simulator
+##### Physical device
 
-This should "just work".
+- Your web app's dev server is binding to host `0.0.0.0` (i.e. all interfaces).
+- You're passing into the WebView the props from `connectionProps`, e.g. `<WebView {...connectionProps({ port: 8080 })} />` (where port `8080` would be the port that your web app's dev server is running on).
+- You can successfully connect to the web app's dev server's URL (e.g. http://192.168.11.2:8080) on iOS Safari.
 
-##### Android emulator
+#### Android
 
-This should also "just work". If not, pleaset review https://developer.android.com/studio/run/emulator-networking.
+##### Emulator
+
+(Same as for iOS simulator.)
+
+##### Physical device
+
+Same as for iOS physical devices, but additionally ensure:
+
+###### Connecting over USB cable
+
+- You can successfully connect to the web app's dev server's URL (e.g. http://172.0.0.1:8080) on your Android device's default browser.
+- Run the following commands to reverse-proxy ports from your development computer's local loopback interface to your device:
+
+  ```sh
+  # List your devices to get the name of your physical device ("HA1K19BG" in this
+  # example).
+  adb devices
+
+  # 1. Map the packager (Metro) port as usual (if you haven't already):
+  adb -s HA1K19BG reverse tcp:8081 tcp:8081
+
+  # 2. Map the web app's dev server port:
+  adb -s HA1K19BG reverse tcp:8080 tcp:8080
+  ```
+
+  These steps are an extension of the official instructions for running React Native on an Android device [over USB](https://reactnative.dev/docs/running-on-device#method-1-using-adb-reverse-recommended).
+
+- Your computer's firewall allows the port for your dev server (e.g. `8080`) accessed.
+
+###### Connecting over Wi-Fi
+
+Not currently supported. Contributions welcome.
 
 ### Does your app have local networking enabled?
 
@@ -280,7 +321,7 @@ First, it's worth checking whether the default `<WebView>` behaviour meets your 
 import { View, SafeAreaView } from "react-native";
 import WebView from "react-native-webview";
 
-export function App() {
+export default function App() {
   return <WebView />;
 }
 ```
@@ -317,9 +358,7 @@ By default, the release build uses the `node --run build` command. The [--run](h
 
 This command is essentially equivalent to `npm run build`, so it assumes that your web app, located at the directory you configured in `app.json` via the [webWorkingDir](https://shirakaba.github.io/dubloon/plugin/~/DubloonProps.html#property_webworkingdir) option, has an npm script field named `"build"` in its `package.json`.
 
-## Error connecting to web app's dev server when running in debug mode
-
-### iOS
+## Error when running on iOS in debug mode "Could not connect to the server"
 
 If your WebView displays this error:
 
@@ -331,22 +370,4 @@ If your WebView displays this error:
 
 … it means that the native app can't connect to the web app's dev server.
 
-Go through this sanity check, based on which device type you're using.
-
-#### Simulator
-
-- Your web app's dev server is bound to either of these hosts:
-  - `127.0.0.1` (i.e. the IPv4 local loopback).
-  - `0.0.0.0` (i.e. all interfaces). This is recommended as it is needed to support physical devices, but be wary that it means any device on the network can connect to it (so don't use for confidential work).
-- You're passing into the WebView the props from `connectionProps`, e.g. `<WebView {...connectionProps({ port: 8080 })} />` (where port `8080` would be the port that your web app's dev server is running on).
-- You can successfully connect to the web app's dev server's URL on macOS Safari.
-
-#### Physical device
-
-- Your web app's dev server is binding to host `0.0.0.0` (i.e. all interfaces).
-- You're passing into the WebView the props from `connectionProps`, e.g. `<WebView {...connectionProps({ port: 8080 })} />` (where port `8080` would be the port that your web app's dev server is running on).
-- You can successfully connect to the web app's dev server's URL (e.g. http://192.168.11.2:8080) on iOS Safari.
-
-### Android
-
-🏗️ Instructions to come.
+Follow the instructions in **Is your networking set up correctly?** to fix.
