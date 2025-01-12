@@ -1,10 +1,14 @@
-import { connectionProps } from "dubloon";
+import { connectionProps, useOnMessage } from "dubloon";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { Alert } from "react-native";
 import WebView, { type WebViewMessageEvent } from "react-native-webview";
 
 export default function App() {
+  useOnMessage((message) => {
+    //
+  });
+
   const onMessage = React.useCallback(
     ({ nativeEvent: { data } }: WebViewMessageEvent) => {
       interface LogPayload {
