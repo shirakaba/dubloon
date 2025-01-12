@@ -24,8 +24,39 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <button
+          style={{ display: "block", marginBlock: "1em" }}
+          onClick={() => setCount((count) => count + 1)}
+        >
           count is {count}
+        </button>
+
+        <button
+          style={{ display: "block", marginBlock: "1em" }}
+          onClick={() => {
+            (window as any).ReactNativeWebView.postMessage(
+              JSON.stringify({
+                type: "log",
+                message: "Hello from the WebView!",
+              })
+            );
+          }}
+        >
+          Log to React Native
+        </button>
+
+        <button
+          style={{ display: "block", marginBlock: "1em" }}
+          onClick={() => {
+            (window as any).ReactNativeWebView.postMessage(
+              JSON.stringify({
+                type: "alert",
+                message: "Alert from the WebView!",
+              })
+            );
+          }}
+        >
+          Show a native alert
         </button>
         <p style={{ paddingBlock: "1em" }}>
           Edit <code>src/App.tsx</code> and save to test HMR
