@@ -11,6 +11,7 @@
   "dependencies": {
     "dubloon": "workspace:*",
     "expo": "~52.0.23",
+    "expo-status-bar": "^2.0.1",
     "react": "18.3.1",
     "react-native": "0.76.5",
     "react-native-webview": "^13.12.5"
