@@ -37,7 +37,7 @@ body {
 
 #root {
   height: 100%;
-  background-color: rgba(255, 235, 205, 0.75);
+  background-color: #65d4fc;
   padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0)
     env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
 }

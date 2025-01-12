@@ -25,14 +25,7 @@ function App() {
       <h1>Vite + React</h1>
       <div className="card">
         <button
-          style={{ display: "block", marginBlock: "1em" }}
-          onClick={() => setCount((count) => count + 1)}
-        >
-          count is {count}
-        </button>
-
-        <button
-          style={{ display: "block", marginBlock: "1em" }}
+          style={{ display: "block" }}
           onClick={() => {
             (window as any).ReactNativeWebView.postMessage(
               JSON.stringify({
@@ -46,7 +39,7 @@ function App() {
         </button>
 
         <button
-          style={{ display: "block", marginBlock: "1em" }}
+          style={{ display: "block" }}
           onClick={() => {
             (window as any).ReactNativeWebView.postMessage(
               JSON.stringify({
