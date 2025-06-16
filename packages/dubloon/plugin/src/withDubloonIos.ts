@@ -125,7 +125,8 @@ export function ensureBuildPhase({
         target,
         // For usage, see:
         // https://github.com/apache/cordova-node-xcode/blob/c491d3a26f11ae63c566ae50fbd44e844f448724/test/addBuildPhase.js#L125
-        destination
+        destination,
+        undefined
       );
       break;
     }
@@ -148,7 +149,8 @@ export function ensureBuildPhase({
         target,
         // The shell script will get sanitised for us:
         // https://github.com/apache/cordova-node-xcode/blob/c491d3a26f11ae63c566ae50fbd44e844f448724/lib/pbxProject.js#L1645
-        { shellPath, shellScript }
+        { shellPath, shellScript },
+        undefined
       );
       break;
     }
@@ -190,7 +192,7 @@ function removeBuildPhase({
     project.hash.project.objects.PBXShellScriptBuildPhase
   )) {
     if (uuid.endsWith("_comment")) {
-      if (nativeTarget !== buildPhaseName) {
+      if ((nativeTarget as unknown as string) !== buildPhaseName) {
         continue;
       }
     } else if (isPBXShellScriptBuildPhase(nativeTarget)) {
@@ -202,7 +204,9 @@ function removeBuildPhase({
       continue;
     }
 
-    delete project.hash.project.objects[buildPhaseType][uuid];
+    delete project.hash.project.objects[
+      buildPhaseType as keyof typeof project.hash.project.objects
+    ][uuid];
   }
 }
 

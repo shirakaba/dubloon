@@ -11,11 +11,13 @@
     "expo-module.config.json",
     "ios",
     "LICENSE-expo.txt",
+    "LICENSE-react-native.txt",
     "plugin/build"
   ],
   "scripts": {
     "dev:api": "expo-module build",
     "dev:plugin": "expo-module build plugin",
+    "test": "jest",
     "build": "EXPO_NONINTERACTIVE=1 expo-module build && EXPO_NONINTERACTIVE=1 expo-module build plugin",
     "prepare": "EXPO_NONINTERACTIVE=1 expo-module prepare",
     "prepublishOnly": "EXPO_NONINTERACTIVE=1 expo-module prepublishOnly"
@@ -37,10 +39,16 @@
   "author": "shirakaba <14055146+shirakaba@users.noreply.github.com> (https://github.com/shirakaba)",
   "license": "MIT",
   "homepage": "https://github.com/shirakaba/dubloon#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@babel/preset-typescript": "^7.27.1"
+  },
   "devDependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "babel-jest": "^30.0.0",
     "expo": "^52.0.23",
     "expo-module-scripts": "^4.0.2",
+    "jest": "^30.0.0",
     "react-native": "^0.76.5",
     "react-native-webview": "^13.12.5",
     "typescript": "^5.3.3"

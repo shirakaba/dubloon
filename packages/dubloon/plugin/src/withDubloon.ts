@@ -1,14 +1,18 @@
+import type { ExpoConfig } from "@expo/config-types";
 import {
-  ConfigPlugin,
+  type ExportedConfig,
   IOSConfig,
   withAppBuildGradle,
   withXcodeProject,
-} from "expo/config-plugins";
+} from "@expo/config-plugins";
 import { ensureBuildPhase, makeXcodeShellScript } from "./withDubloonIos";
 import { assertValidProps } from "./withDubloonCommon";
 import { makeGradleScript } from "./withDubloonAndroid";
 
-export const withDubloon: ConfigPlugin<unknown> = (config, props) => {
+export const withDubloon = (
+  config: ExpoConfig,
+  props: unknown
+): ExportedConfig => {
   assertValidProps(props);
 
   config = withXcodeProject(config, async (config) => {
