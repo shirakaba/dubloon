@@ -13,11 +13,37 @@ export const DubloonPropsStruct = z.object({
 
       /**
        * The working directory from which to run the build.
+       *
+       * Both absolute and relative paths are supported. If specified as a
+       * relative path, it is resolved relative to the Expo project root (i.e.
+       * the directory that holds `app.json`).
+       *
+       * It is recommended to place the web app side-by-side with the Expo app
+       * and refer to the directory via a relative path. This makes it
+       * environment-agnostic.
+       *
+       * **Examples**
+       * - `"../web"`
+       * - `"/Users/jamie/my-web-app"`
        */
       cwd: z.optional(z.string()),
 
       /**
-       * The path to the config file.
+       * The path to the config file for the build.
+       *
+       * Both absolute and relative paths are supported. If specified as a
+       * relative path, it is resolved relative to the Expo project root (i.e.
+       * the directory that holds `app.json`).
+       *
+       * It is recommended to place the web app side-by-side with the Expo app
+       * and refer to the directory via a relative path. This makes it
+       * environment-agnostic.
+       *
+       * **Examples**
+       * - `"../web/vite.config.ts"`
+       * - `"/Users/jamie/my-web-app/vite.config.ts"`
+       * - `"../web/webpack.config.js"`
+       * - `"/Users/jamie/my-web-app/webpack.config.js"`
        */
       path: z.string(),
     }),
@@ -26,16 +52,17 @@ export const DubloonPropsStruct = z.object({
       type: z.literal("custom"),
 
       /**
-       * The path to the working directory for the web project. The web app is built
-       * from here, using the default command (essentially `node --run build`) or a
-       * custom one specified via the `webBuildCommands` option.
+       * The path to the working directory for the web project. The web app is
+       * built from here, using the default command (essentially
+       * `node --run build`) or a custom one specified via the
+       * `webBuildCommands` option.
        *
-       * Both absolute and relative paths are supported. If specified as a relative
-       * path, it is resolved relative to the Expo project root (i.e. the directory
-       * that holds `app.json`).
+       * Both absolute and relative paths are supported. If specified as a
+       * relative path, it is resolved relative to the Expo project root (i.e.
+       * the directory that holds `app.json`).
        *
-       * It is recommended to place the web app side-by-side with the Expo app and
-       * refer to the directory via a relative path. This makes it
+       * It is recommended to place the web app side-by-side with the Expo app
+       * and refer to the directory via a relative path. This makes it
        * environment-agnostic.
        *
        * **Examples**
@@ -48,12 +75,13 @@ export const DubloonPropsStruct = z.object({
        * The command, or platform-specific commands to build the web app. Each
        * command can be an empty string if your web app has no build step.
        *
-       * By default, we essentially call `node --run build`, with some subtlety in
-       * order to get the path to `node` safely:
+       * By default, we essentially call `node --run build`, with some subtlety
+       * in order to get the path to `node` safely:
        *
-       * - When targeting Apple platforms (iOS, tvOS, macOS, etc.), the command runs
-       * in an Xcode build phase shell script which sources environment variables
-       * from `ios/.xcode.env.local`. It defaults to `'"$NODE_BINARY" --run build'`.
+       * - When targeting Apple platforms (iOS, tvOS, macOS, etc.), the command
+       * runs in an Xcode build phase shell script which sources environment
+       * variables from `ios/.xcode.env.local`. It defaults to
+       * `'"$NODE_BINARY" --run build'`.
        * - When targeting Android or Windows, the command runs using the user's
        * default shell. It defaults to `node --run build"`.
        *
@@ -89,15 +117,16 @@ export const DubloonPropsStruct = z.object({
       ),
 
       /**
-       * The path that the web app gets output to once built. During release builds,
-       * Dubloon will build the app and then copy it from here into your Expo app.
+       * The path that the web app gets output to once built. During release
+       * builds, Dubloon will build the app and then copy it from here into your
+       * Expo app.
        *
-       * Both absolute and relative paths are supported. If specified as a relative
-       * path, it is resolved relative to the Expo project root (i.e. the directory
-       * that holds `app.json`).
+       * Both absolute and relative paths are supported. If specified as a
+       * relative path, it is resolved relative to the Expo project root (i.e.
+       * the directory that holds `app.json`).
        *
-       * It is recommended to place the web app side-by-side with the Expo app and
-       * refer to the directory via a relative path. This makes it
+       * It is recommended to place the web app side-by-side with the Expo app
+       * and refer to the directory via a relative path. This makes it
        * environment-agnostic.
        *
        * **Examples**
