@@ -30,8 +30,11 @@
       [
         "dubloon",
         {
-          "webWorkingDir": "../web",
-          "webOutputDir": "../web/dist"
+          "config": {
+            "type": "custom",
+            "webWorkingDir": "../web",
+            "webOutputDir": "../web/dist"
+          }
         }
       ]
     ]

@@ -75,8 +75,9 @@ const expoConfig: ExpoConfig = {
       "dubloon",
       {
         config: {
-          type: "vite",
-          path: "../web",
+          type: "custom",
+          webWorkingDir: "../web",
+          webOutputDir: "../web/dist",
         },
       } satisfies DubloonProps,
     ],

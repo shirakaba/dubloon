@@ -5,16 +5,17 @@ import { defaultWebBuildCommands } from "./withDubloonCommon";
 
 export function makeXcodeShellScript(
   platform: ModPlatform,
-  {
-    webWorkingDir,
-    webBuildCommands,
-    webOutputDir,
-    bundleDirName = "web",
-  }: DubloonProps
+  { config }: DubloonProps
 ) {
-  webBuildCommands = {
+  if (config.type !== "custom") {
+    throw new Error("Only type 'custom' supported currently.");
+  }
+
+  const { webWorkingDir, webOutputDir, bundleDirName = "web" } = config;
+
+  const webBuildCommands = {
     ...defaultWebBuildCommands,
-    ...webBuildCommands,
+    ...config.webBuildCommands,
   };
   const webBuildCommand = webBuildCommands[platform];
   if (typeof webBuildCommand === "undefined") {

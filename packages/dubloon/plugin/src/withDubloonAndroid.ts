@@ -2,15 +2,16 @@ import path from "node:path";
 import type { DubloonProps } from "./DubloonProps";
 import { defaultWebBuildCommands } from "./withDubloonCommon";
 
-export function makeGradleScript({
-  webWorkingDir,
-  webBuildCommands,
-  webOutputDir,
-  bundleDirName = "web",
-}: DubloonProps) {
-  webBuildCommands = {
+export function makeGradleScript({ config }: DubloonProps) {
+  if (config.type !== "custom") {
+    throw new Error("Only type 'custom' supported currently.");
+  }
+
+  const { webWorkingDir, webOutputDir, bundleDirName = "web" } = config;
+
+  const webBuildCommands = {
     ...defaultWebBuildCommands,
-    ...webBuildCommands,
+    ...config.webBuildCommands,
   };
 
   const webBuildCommand = webBuildCommands.android;
