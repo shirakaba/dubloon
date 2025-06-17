@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { DubloonProps } from "./DubloonProps.types";
+import type { DubloonProps } from "./DubloonProps";
 import { defaultWebBuildCommands } from "./withDubloonCommon";
 
 export function makeGradleScript({

@@ -5,7 +5,7 @@ import type { ExpoConfig } from "@expo/config-types";
 import type { XcodeProject } from "@expo/config-plugins";
 
 import { withDubloon } from "./withDubloon";
-import type { DubloonProps } from "./DubloonProps.types";
+import type { DubloonProps } from "./DubloonProps";
 import { expectToBeNonNullable } from "../../test/expect";
 
 const workspace = path.resolve(__dirname, "../..");
@@ -74,8 +74,10 @@ const expoConfig: ExpoConfig = {
     [
       "dubloon",
       {
-        webWorkingDir: "../web",
-        webOutputDir: "../web/dist",
+        config: {
+          type: "vite",
+          path: "../web",
+        },
       } satisfies DubloonProps,
     ],
   ],
