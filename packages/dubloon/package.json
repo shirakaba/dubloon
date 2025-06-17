@@ -51,7 +51,9 @@
     "jest": "^30.0.0",
     "react-native": "^0.76.5",
     "react-native-webview": "^13.12.5",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vite": "^6.3.5",
+    "webpack": "^5.99.9"
   },
   "peerDependencies": {
     "expo": "*",

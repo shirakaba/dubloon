@@ -1,3 +1,7 @@
+// https://stackoverflow.com/a/78907287/5951226
+import type { UserConfigExport } from "vite" with { "resolution-mode": "import" };
+import type { LoadableWebpackConfiguration } from "./webpack.types";
+
 /**
  * `DubloonProps` are the options that you can specify in your `app.json` to
  * configure the Dubloon Expo
@@ -47,6 +51,12 @@
  * ```
  */
 export interface DubloonProps {
+  config?:
+    // Should we take a path to a config, or enforce the typings here?
+    | { type: "vite"; config: UserConfigExport }
+    | { type: "webpack"; config: LoadableWebpackConfiguration | Array<LoadableWebpackConfiguration> };
+    // TODO: rspack, rsbuild, etc.
+
   /**
    * The path to the working directory for the web project. The web app is built
    * from here, using the default command (essentially `node --run build`) or a
