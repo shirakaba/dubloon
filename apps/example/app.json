@@ -31,8 +31,8 @@
         "dubloon",
         {
           "config": {
-            "type": "vite",
-            "path": "../web/vite.config.ts"
+            "webWorkingDir": "../web",
+            "webOutputDir": "../web/dist"
           }
         }
       ]

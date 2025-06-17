@@ -12,7 +12,7 @@ export function makeGradleScript({
   dubloonProps: DubloonProps;
 }) {
   const { webBuildCommands, bundleDirName, webWorkingDir, webOutputDir } =
-    normalizeDubloonProps(expoConfig, dubloonProps);
+    normalizeDubloonProps(dubloonProps);
 
   const webBuildCommand = webBuildCommands.android;
   if (!Array.isArray(webBuildCommand)) {

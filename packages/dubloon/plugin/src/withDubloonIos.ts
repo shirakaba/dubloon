@@ -14,7 +14,7 @@ export function makeXcodeShellScript({
   dubloonProps: DubloonProps;
 }) {
   const { webBuildCommands, bundleDirName, webWorkingDir, webOutputDir } =
-    normalizeDubloonProps(expoConfig, dubloonProps);
+    normalizeDubloonProps(dubloonProps);
   const {
     modRequest: { platform },
   } = expoConfig;

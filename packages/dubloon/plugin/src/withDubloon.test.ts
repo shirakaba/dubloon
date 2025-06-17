@@ -75,7 +75,6 @@ const expoConfig: ExpoConfig = {
       "dubloon",
       {
         config: {
-          type: "custom",
           webWorkingDir: "../web",
           webOutputDir: "../web/dist",
         },
