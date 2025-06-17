@@ -1,18 +1,18 @@
+import type { ExportedConfigWithProps } from "@expo/config-plugins";
+import type { GradleProjectFile } from "@expo/config-plugins/build/android/Paths";
 import path from "node:path";
 import type { DubloonProps } from "./DubloonProps";
-import { defaultWebBuildCommands } from "./withDubloonCommon";
+import { normalizeDubloonProps } from "./normaliseDubloonProps";
 
-export function makeGradleScript({ config }: DubloonProps) {
-  if (config.type !== "custom") {
-    throw new Error("Only type 'custom' supported currently.");
-  }
-
-  const { webWorkingDir, webOutputDir, bundleDirName = "web" } = config;
-
-  const webBuildCommands = {
-    ...defaultWebBuildCommands,
-    ...config.webBuildCommands,
-  };
+export function makeGradleScript({
+  expoConfig,
+  dubloonProps,
+}: {
+  expoConfig: ExportedConfigWithProps<GradleProjectFile>;
+  dubloonProps: DubloonProps;
+}) {
+  const { webBuildCommands, bundleDirName, webWorkingDir, webOutputDir } =
+    normalizeDubloonProps(expoConfig, dubloonProps);
 
   const webBuildCommand = webBuildCommands.android;
   if (!Array.isArray(webBuildCommand)) {

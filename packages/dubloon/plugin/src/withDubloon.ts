@@ -28,10 +28,10 @@ export const withDubloon = (
         shellPath: "/bin/sh",
         // We escape line breaks as Xcode will otherwise do it anyway the moment
         // someone edits the script via the GUI.
-        shellScript: makeXcodeShellScript(
-          config.modRequest.platform,
-          props
-        ).replaceAll("\n", "\\n"),
+        shellScript: makeXcodeShellScript({
+          expoConfig: config,
+          dubloonProps: props,
+        }).replaceAll("\n", "\\n"),
       },
     });
     config.modResults = project;
@@ -51,9 +51,10 @@ export const withDubloon = (
     const pattern = new RegExp(`${startAnchor}[\\s\\S]*${endAnchor}`, "m");
 
     const match = pattern.exec(config.modResults.contents);
-    const anchoredScript = `${startAnchor}\n${makeGradleScript(
-      props
-    )}\n${endAnchor}`;
+    const anchoredScript = `${startAnchor}\n${makeGradleScript({
+      expoConfig: config,
+      dubloonProps: props,
+    })}\n${endAnchor}`;
 
     if (match) {
       if (match[0] === anchoredScript) {

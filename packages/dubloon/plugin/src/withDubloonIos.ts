@@ -1,22 +1,24 @@
+import {
+  type ExportedConfigWithProps,
+  XcodeProject,
+} from "@expo/config-plugins";
 import path from "node:path";
-import type { ModPlatform, XcodeProject } from "expo/config-plugins";
 import type { DubloonProps } from "./DubloonProps";
-import { defaultWebBuildCommands } from "./withDubloonCommon";
+import { normalizeDubloonProps } from "./normaliseDubloonProps";
 
-export function makeXcodeShellScript(
-  platform: ModPlatform,
-  { config }: DubloonProps
-) {
-  if (config.type !== "custom") {
-    throw new Error("Only type 'custom' supported currently.");
-  }
+export function makeXcodeShellScript({
+  expoConfig,
+  dubloonProps,
+}: {
+  expoConfig: ExportedConfigWithProps<XcodeProject>;
+  dubloonProps: DubloonProps;
+}) {
+  const { webBuildCommands, bundleDirName, webWorkingDir, webOutputDir } =
+    normalizeDubloonProps(expoConfig, dubloonProps);
+  const {
+    modRequest: { platform },
+  } = expoConfig;
 
-  const { webWorkingDir, webOutputDir, bundleDirName = "web" } = config;
-
-  const webBuildCommands = {
-    ...defaultWebBuildCommands,
-    ...config.webBuildCommands,
-  };
   const webBuildCommand = webBuildCommands[platform];
   if (typeof webBuildCommand === "undefined") {
     throw new Error(`Unrecognised Apple platform "${platform}"`);
