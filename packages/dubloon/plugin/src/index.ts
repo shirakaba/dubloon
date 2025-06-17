@@ -1,3 +1,3 @@
-import { withDubloon } from "./withDubloon";
+import { withDubloon } from "./withDubloon.js";
 
 export default withDubloon;

@@ -1,4 +1,4 @@
-import type { DubloonProps } from "./DubloonProps.types";
+import type { DubloonProps } from "./DubloonProps.types.ts";
 
 export function assertValidProps(obj: unknown): asserts obj is DubloonProps {
   if (typeof obj !== "object" || obj === null) {

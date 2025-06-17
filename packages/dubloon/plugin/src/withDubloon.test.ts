@@ -4,9 +4,9 @@ import path from "node:path";
 import type { ExpoConfig } from "@expo/config-types";
 import type { XcodeProject } from "@expo/config-plugins";
 
-import { withDubloon } from "./withDubloon";
-import type { DubloonProps } from "./DubloonProps.types";
-import { expectToBeNonNullable } from "../../test/expect";
+import { withDubloon } from "./withDubloon.ts";
+import type { DubloonProps } from "./DubloonProps.types.ts";
+import { expectToBeNonNullable } from "../../test/expect.ts";
 
 const workspace = path.resolve(__dirname, "../..");
 const monorepoRoot = path.resolve(workspace, "../..");

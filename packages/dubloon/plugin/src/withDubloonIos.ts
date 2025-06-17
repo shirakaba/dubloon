@@ -1,7 +1,7 @@
 import path from "node:path";
-import type { ModPlatform, XcodeProject } from "expo/config-plugins";
-import type { DubloonProps } from "./DubloonProps.types";
-import { defaultWebBuildCommands } from "./withDubloonCommon";
+import type { ModPlatform, XcodeProject } from "expo/config-plugins.ts";
+import type { DubloonProps } from "./DubloonProps.types.ts";
+import { defaultWebBuildCommands } from "./withDubloonCommon.ts";
 
 export function makeXcodeShellScript(
   platform: ModPlatform,

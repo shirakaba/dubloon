@@ -5,9 +5,9 @@ import {
   withAppBuildGradle,
   withXcodeProject,
 } from "@expo/config-plugins";
-import { ensureBuildPhase, makeXcodeShellScript } from "./withDubloonIos";
-import { assertValidProps } from "./withDubloonCommon";
-import { makeGradleScript } from "./withDubloonAndroid";
+import { ensureBuildPhase, makeXcodeShellScript } from "./withDubloonIos.ts";
+import { assertValidProps } from "./withDubloonCommon.ts";
+import { makeGradleScript } from "./withDubloonAndroid.ts";
 
 export const withDubloon = (
   config: ExpoConfig,
