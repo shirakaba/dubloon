@@ -6,9 +6,22 @@ import { z } from "zod/v4-mini";
 export const DubloonPropsStruct = z.object({
   config: z.union([
     z.object({
+      /**
+       * The type of bundler.
+       */
       type: z.union([z.literal("vite"), z.literal("webpack")]),
+
+      /**
+       * The working directory from which to run the build.
+       */
+      cwd: z.optional(z.string()),
+
+      /**
+       * The path to the config file.
+       */
       path: z.string(),
     }),
+
     z.object({
       type: z.literal("custom"),
 
