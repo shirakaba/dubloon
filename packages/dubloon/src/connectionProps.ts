@@ -90,7 +90,13 @@ export function connectionProps({
     } as Pick<WebViewProps, "source">;
   }
 
-  const webRoot = `${DubloonModule.basePath}${bundleDirName}`;
+  // DubloonModule.basePath seems to end with a slash on Android, but not on
+  // iOS. This regex replacement will ensure that both cases end with a single
+  // trailing slash.
+  const webRoot = `${DubloonModule.basePath.replace(
+    /\/*$/,
+    "/"
+  )}${bundleDirName}`;
 
   return {
     allowFileAccessFromFileURLs: true,
