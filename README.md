@@ -2,7 +2,7 @@
 
 # About
 
-An Expo [Config Plugin](https://docs.expo.dev/config-plugins/introduction/) for embedding a web app inside a React Native (Expo) app. It's a library that gives you a development experience similar to Capacitor or Electron, but with full access to the React Native and Expo ecosystems.
+An Expo [Config Plugin](https://docs.expo.dev/config-plugins/introduction/) for embedding a web app inside a React Native (Expo) app. It's a library that gives you a development experience similar to Capacitor or Electron, but with full access to the React Native and Expo ecosystems. Not just a toy - used successfully in production on iOS, Android, macOS, and Windows (though the config plugin only handles iOS and Android).
 
 _It's called "Dubloon" (based on [doubloon](https://en.wikipedia.org/wiki/Doubloon)) because the "dub" sounds a bit like the first part of "WWW" and quite frankly because everyone's taken all the good names already._
 
