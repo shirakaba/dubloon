@@ -31,6 +31,8 @@ npm install dubloon react-native-webview
 
 ## Setup
 
+### For iOS and Android
+
 Configure your Expo app's `app.json` file to use the Dubloon Expo Config plugin:
 
 ```js
@@ -59,6 +61,94 @@ Finally, apply the Config Plugin by running Expo [Prebuild](https://docs.expo.de
 ```sh
 npx expo prebuild --clean
 ```
+
+### For macOS
+
+Until Expo supports Config Plugins for `react-native-macos`, this step has to be done manually. It's needed to support release builds.
+
+Open your Xcode project, navigate to the build phases for your macOS app target, and press the `+` button, then select `New Run Script Phase` from the drop-down menu. In that run script phase, fill in the following details:
+
+- Shell: `/bin/sh`
+- Script:
+  This is based on the Expo `Bundle React Native code and images` run script phase. Essentially, it changes directory into your `webWorkingDir`, runs `node --run build` to build your web app, and then copies the `webOutputDir` into your app bundle.
+
+  ```sh
+  set -x -e
+
+  if [[ "$CONFIGURATION" = *Debug* ]]; then
+    exit 0
+  fi
+
+  if [[ -f "$PODS_ROOT/../.xcode.env" ]]; then
+    source "$PODS_ROOT/../.xcode.env"
+  fi
+  if [[ -f "$PODS_ROOT/../.xcode.env.local" ]]; then
+    source "$PODS_ROOT/../.xcode.env.local"
+  fi
+
+  # The project root by default is one level up from the macos directory
+  export PROJECT_ROOT="$PROJECT_DIR"/..
+
+  echo "[Dubloon] Building the web app..."
+
+  # With reference to node_modules/react-native/scripts/react-native-xcode.sh
+  export WEB_CWD=$("$NODE_BINARY" --print "require('node:path').resolve('$PROJECT_ROOT', 'web')")
+  echo "[Dubloon] Resolved WEB_CWD as: \"$WEB_CWD\""
+  export DEST=$CONFIGURATION_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH
+
+  pushd "$WEB_CWD"
+  "$NODE_BINARY" --run build
+  popd
+
+  echo "[Dubloon] ... Built the web app."
+
+  echo "[Dubloon] Copying the web app build into the app bundle..."
+  export WEB_DIST=$("$NODE_BINARY" --print "require('node:path').resolve('$PROJECT_ROOT', 'web/dist')")
+  echo "[Dubloon] Resolved WEB_DIST as: \"$WEB_DIST\""
+  mkdir -vp "$DEST/web"
+  cp -r "$WEB_DIST/" "$DEST/web"
+  echo "[Dubloon] ... Copied the web app build into the app bundle."
+  ```
+
+- Other options (checkboxes, files, file lists): nothing special; leave as default.
+
+### For Windows
+
+Windows is honestly rather hard to set up, but it can be done.
+
+#### Patching React Native WebView
+
+Until virtual host support can be upstreamed, you will need to patch `react-native-webview` to hard-code support for a virtual host named `https://dubloon-virtual`. This is needed to access web assets on the file system without running into CORS issues.
+
+To do so, add this line inside `windows/ReactNativeWebView/ReactWebView2.cpp`, inside [`ReactWebView2::NavigateWithWebResourceRequest`](https://github.com/react-native-webview/react-native-webview/blob/8b50af5ad6cb5ae0699b25c8ee70cd4d8a1f167c/windows/ReactNativeWebView/ReactWebView2.cpp#L409):
+
+```diff
++ CoreWebView2().SetVirtualHostNameToFolderMapping(
++   L"dubloon-virtual",
++   L"Assets",
++   CoreWebView2HostResourceAccessKind::Allow
++ )
+```
+
+This allows us to visit the URL https://dubloon-virtual/web/index.html to access a file such as file:///C:/Users/Jamie/git/banana-app/windows/banana.Package/bin/x64/Release/Assets/web/index.html.
+
+References:
+
+- https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.core.corewebview2.setvirtualhostnametofoldermapping?view=webview2-dotnet-1.0.1054.31
+- https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/working-with-local-content?tabs=dotnetcsharp
+
+#### Reconfiguring the build pipeline
+
+Next, we need to reconfigure the build pipeline to build and bundle the web app into the native app upon release builds.
+
+Do the following (assuming your `bundleDirName` is `web`):
+
+- gitignore `Assets/web`
+- configure `msbuild` to:
+  - build the web app and copy it into `Assets/web`
+  - bundle `Assets/web/**/*` into the app upon release
+
+... good luck!
 
 ## Usage
 

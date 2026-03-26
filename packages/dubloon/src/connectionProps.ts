@@ -46,6 +46,13 @@ export function connectionProps({
     // We work out the
     let host: string;
     switch (Platform.OS) {
+      case "windows":
+      case "macos": {
+        // Desktop is the simplest case. There's no external device to worry
+        // about, so we can just stick to the local loopback.
+        host = "localhost";
+        break;
+      }
       case "ios": {
         // React Native iOS physical devices connect to the packager over a LAN
         // IP, e.g. http://192.168.11.2:8081, which we retrieve from
@@ -78,7 +85,8 @@ export function connectionProps({
         break;
       }
       default: {
-        host = localLoopbackIPv4;
+        // ... VegaOS?
+        host = "localhost";
         break;
       }
     }
@@ -95,7 +103,7 @@ export function connectionProps({
   // trailing slash.
   const webRoot = `${DubloonModule.basePath.replace(
     /\/*$/,
-    "/"
+    "/",
   )}${bundleDirName}`;
 
   return {
@@ -105,6 +113,11 @@ export function connectionProps({
     // get opened via Linking (to be passed on to Safari) instead.
     originWhitelist: ["file://*"],
     allowingReadAccessToURL: webRoot,
-    source: { uri: `${webRoot}${path}` },
+    source: {
+      uri:
+        Platform.OS === "windows"
+          ? `https://dubloon-virtual/${webRoot}${path}`
+          : `${webRoot}${path}`,
+    },
   };
 }
