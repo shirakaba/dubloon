@@ -41,8 +41,10 @@ Configure your Expo app's `app.json` file to use the Dubloon Expo Config plugin:
       [
         "dubloon",
         {
-          "webWorkingDir": "../path/to/web/app",
-          "webOutputDir": "../path/to/web/app/build"
+          "config": {
+            "webWorkingDir": "../path/to/web/app",
+            "webOutputDir": "../path/to/web/app/build"
+          }
         }
       ]
     ]
